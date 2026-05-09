@@ -54,7 +54,7 @@ async def start(bot, m: Message):
     mention = user.mention
     if m.chat.id in AUTH_USERS:
         caption = (
-            f"𝐇𝐞𝐥𝐥𝐨 𝐃𝐞𝐚𝐫 😚😚!\n\n"
+            f"𝐇𝐞𝐥𝐥𝐨 𝐃𝐞𝐚𝐫😘!\n\n"
             f"➠ 𝐈 𝐚𝐦 𝐚 𝐓𝐞𝐱𝐭 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
             f"➠ Can Extract Videos & PDFs From Your Text File and Upload to Telegram!\n\n"
             f"➠ For Guide Use button - **✨ Commands** 📖\n\n"
@@ -71,7 +71,7 @@ async def start(bot, m: Message):
         )
     await bot.send_photo(
         chat_id=m.chat.id,
-        photo="https://iili.io/KuCBoV2.jpg",
+        photo="https://graph.org/file/29c4511ee7a4653d22fe1-67906a2a8392895644.jpg",
         caption=caption,
         reply_markup=keyboard
     )
@@ -89,7 +89,7 @@ async def back_to_main_menu(client, callback_query):
     
     await callback_query.message.edit_media(
       InputMediaPhoto(
-        media="https://envs.sh/GVI.jpg",
+        media="https://graph.org/file/417cc7326cab9036c0152-f6a281db2a6975dfa9.jpg",
         caption=caption
       ),
       reply_markup=keyboard
@@ -182,6 +182,7 @@ register_upgrade_handlers(bot)
 register_commands_handlers(bot)
 register_broadcast_handlers(bot)
 register_youtube_handlers(bot)
+register_broadcastBro_handlers(bot)
 register_authorisation_handlers(bot)
 register_drm_handlers(bot)
 #==================================================================
