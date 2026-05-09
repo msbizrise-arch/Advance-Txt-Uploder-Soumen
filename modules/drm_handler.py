@@ -311,8 +311,14 @@ async def drm_handler(bot: Client, m: Message):
 
             #elif "d1d34p8vz63oiq" in url or "sec1.pw.live" in url:
             elif "childId" in url and "parentId" in url:
+                if pwtoken == "pwtoken" or not pwtoken:
+                    await bot.send_message(channel_id, f'⚠️ **PW Token not set!**\n**Name** =>> `{name1}`\n\n<blockquote>Please set your Physics Wallah token first via\n**Settings → Set Token → Physics Wallah**</blockquote>', disable_web_page_preview=True)
+                    count += 1
+                    failed_count += 1
+                    continue
                 url = f"https://anonymouspwplayer-0e5a3f512dec.herokuapp.com/pw?url={url}&token={pwtoken}"
-                                      
+                cmd = f'yt-dlp --add-header "Referer:https://www.pw.live/" --add-header "Origin:https://www.pw.live" -f "{ytf}" -o "{name}.mp4" "{url}"'
+                
             elif 'encrypted.m' in url:
                 appxkey = url.split('*')[1]
                 url = url.split('*')[0]

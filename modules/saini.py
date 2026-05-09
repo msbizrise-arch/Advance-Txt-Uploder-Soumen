@@ -22,12 +22,21 @@ from Crypto.Util.Padding import unpad
 from base64 import b64decode
 
 def duration(filename):
-    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
-                             "format=duration", "-of",
-                             "default=noprint_wrappers=1:nokey=1", filename],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    return float(result.stdout)
+    try:
+        result = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries",
+             "format=duration", "-of",
+             "default=noprint_wrappers=1:nokey=1", filename],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        output = result.stdout.decode("utf-8", errors="ignore").strip()
+        if not output:
+            # fallback: try stderr too
+            output = result.stderr.decode("utf-8", errors="ignore").strip()
+        return float(output) if output else 0.0
+    except Exception:
+        return 0.0
  
 def exec(cmd):
         process = subprocess.run(cmd, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
