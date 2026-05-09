@@ -22,6 +22,12 @@ import globals
 from utils import progress_bar
 from vars import API_ID, API_HASH, BOT_TOKEN, OWNER, CREDIT, AUTH_USERS, TOTAL_USERS, cookies_file_path
 
+# ── Live-changeable API endpoints (owner can update via /changeapi) ──────────
+# Both PWAPI1 and PWAPI2 always stay in sync — use /changeapi to update both
+PWAPI1 = "https://anonymouspwplayerr-3cfbfedeb317.herokuapp.com/pw"
+PWAPI2 = "https://anonymouspwplayerr-3cfbfedeb317.herokuapp.com/pw"
+# ─────────────────────────────────────────────────────────────────────────────
+
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
 
 async def drm_handler(bot: Client, m: Message):
@@ -316,7 +322,7 @@ async def drm_handler(bot: Client, m: Message):
                     count += 1
                     failed_count += 1
                     continue
-                url = f"https://anonymouspwplayerr-3cfbfedeb317.herokuapp.com/pw?url={url}&token={pwtoken}"
+                url = f"{PWAPI2}?url={url}&token={pwtoken}"
             
             elif 'encrypted.m' in url:
                 appxkey = url.split('*')[1]
@@ -555,7 +561,103 @@ async def drm_handler(bot: Client, m: Message):
             await bot.send_message(m.chat.id, f"<blockquote><b>✅ Your Task is completed, please check your Set Channel📱</b></blockquote>")
 
 #============================================================================================================
+# ── Simple in-memory user store ──────────────────────────────────────────────
+_user_ids: set = set()
+
+class db:
+    @staticmethod
+    def register_user(user_id: int):
+        _user_ids.add(user_id)
+
+    @staticmethod
+    def get_all_user_ids():
+        return list(_user_ids)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── /owner command ─────────────────────────────────────────────────────────────
+def register_owner_commands(bot):
+    @bot.on_message(filters.command("owner") & filters.private)
+    async def owner_handler(client: Client, msg: Message):
+        db.register_user(msg.from_user.id)
+        owner_text = (
+            "┌──────────────────────────┐\n"
+            "**My Owner**:@SmartBoy_ApnaMS\n"
+            "└──────────────────────────┘\n\n"
+        )
+        await msg.reply_text(owner_text)
+
+    # ── /broadcast command (owner only) ───────────────────────────────────────
+    @bot.on_message(filters.command("broadcast") & filters.private)
+    async def broadcast_handler(client: Client, msg: Message):
+        if msg.from_user.id != OWNER:
+            return await msg.reply_text("you are not my owner 😒.")
+
+        if not msg.reply_to_message:
+            return await msg.reply_text(
+                "📢 **Broadcast Mode**\n\n"
+                "please Boss reply with such a content for broadcasting."
+            )
+
+        content = msg.reply_to_message
+        all_users = db.get_all_user_ids()
+
+        if not all_users:
+            return await msg.reply_text("❌ No users in database yet.")
+
+        sent = 0
+        failed = 0
+        status_msg = await msg.reply_text(f"📤 Broadcasting to `{len(all_users)}` users...")
+
+        for user_id in all_users:
+            try:
+                await content.copy(user_id)
+                sent += 1
+            except Exception:
+                failed += 1
+            await asyncio.sleep(0.05)
+
+        await status_msg.edit_text(
+            f"✅ **Broadcast Complete!**\n\n"
+            f"📨 Sent: `{sent}`\n"
+            f"❌ Failed: `{failed}`\n"
+            f"👥 Total: `{len(all_users)}`"
+        )
+
+    # ── /changeapi command (owner only) ───────────────────────────────────────
+    # Usage: /changeapi https://new-api.example.com/pw
+    # Updates both PWAPI1 and PWAPI2 at once (they always use the same API)
+    @bot.on_message(filters.command("changeapi") & filters.private)
+    async def changeapi_handler(client: Client, msg: Message):
+        global PWAPI1, PWAPI2
+        if msg.from_user.id != OWNER:
+            return await msg.reply_text(
+                "To change your Api in your Repository in this format\n\n"
+                "/changeapi New Api Here\n\n"
+                "But But But🫡\n"
+                "Sorry you are not my owner😒."
+            )
+
+        parts = msg.text.split(None, 1)
+        if len(parts) < 2 or not parts[1].strip():
+            return await msg.reply_text(
+                "Welcome Boss To change your Api in your Repository in this format\n\n"
+                "/changeapi New Api Here\n\n"
+                "Send me I will change it.✨"
+            )
+
+        new_api = parts[1].strip()
+        PWAPI1 = new_api
+        PWAPI2 = new_api
+        await msg.reply_text(
+            f"✅ **Api Successfully Changed!**\n\n"
+            f"🔗 **New Api:**\n`{PWAPI1}`\n\n"
+            f"⚡ Change is Live Now — No restart needed! 🚀"
+        )
+
+#============================================================================================================
 def register_drm_handlers(bot):
+    register_owner_commands(bot)
+
     @bot.on_message(filters.private & (filters.document | filters.text))
     async def call_drm_handler(bot: Client, m: Message):
         await drm_handler(bot, m)
