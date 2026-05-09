@@ -316,7 +316,7 @@ async def drm_handler(bot: Client, m: Message):
                     count += 1
                     failed_count += 1
                     continue
-                url = f"https://anonymouspwplayer-0e5a3f512dec.herokuapp.com/pw?url={url}&token={pwtoken}"
+                url = f"https://anonymouspwplayerr-3cfbfedeb317.herokuapp.com/pw?url={url}&token={pwtoken}"
                 cmd = f'yt-dlp --add-header "Referer:https://www.pw.live/" --add-header "Origin:https://www.pw.live" -f "{ytf}" -o "{name}.mp4" "{url}"'
                 
             elif 'encrypted.m' in url:
