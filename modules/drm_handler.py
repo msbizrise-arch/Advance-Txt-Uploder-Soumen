@@ -156,7 +156,7 @@ async def drm_handler(bot: Client, m: Message):
             await m.reply_text("🔹**Processing Canclled......  **")
             return
 
-        await editable.edit(f"**(2). Enter Batch Name or send /Bro\n\nYour Are On Step: 2/7💥**")
+        await editable.edit(f"**(2). Enter Batch Name or send   /Bro\n\nYour Are On Step: 2/7💥**")
         try:
             input1: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text0 = input1.text
@@ -195,7 +195,7 @@ async def drm_handler(bot: Client, m: Message):
             res = "UN"
         quality = f"{raw_text2}p"
 
-        await editable.edit("**(4). Enter Your PW Token or send /Vip to use Your Set Token(in Settings)😎.\n\nYour Are On Step: 4/7💥**")
+        await editable.edit("**(4). Enter Your PW Token or send        /Vip to use Your Set Token(in Settings)😎.\n\nYour Are On Step: 4/7💥**")
         try:
             input_tok: Message = await bot.listen(editable.chat.id, timeout=300)
             raw_tok = input_tok.text
@@ -207,7 +207,7 @@ async def drm_handler(bot: Client, m: Message):
         else:
             pwtoken = raw_tok
 
-        await editable.edit("**(5). Enter Your Credit Name or send /Sobi to Use Your Set Credit Name(in the Settings).\nSupports: `Text|URL` for hyperlink 😎.\n\nYour Are On Step: 5/7💥**")
+        await editable.edit("**(5). Enter Your Credit Name or send       /Sobi to Use Your Set Credit Name(in the Settings).\nSupports: `Text|URL` for hyperlink 😎.\n\nYour Are On Step: 5/7💥**")
         try:
             input3: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text3 = input3.text
@@ -254,7 +254,7 @@ async def drm_handler(bot: Client, m: Message):
             CR = globals.CR
             path = os.path.join("downloads", "Free Batch")
             editable = await m.reply_text("**(1). PDF/Image Link Captured ✅\n\nSettings se Credit Name automatic lagega 🌚.\n\nYour Are On Step: 1/2💥**")
-            await editable.edit("**(2). Enter Batch Name or send /unknown if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
+            await editable.edit("**(2). Enter Batch Name or send          /unknown if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
             try:
                 input_bn: Message = await bot.listen(editable.chat.id, filters=filters.text & filters.user(m.from_user.id))
                 raw_text0 = input_bn.text
@@ -288,7 +288,7 @@ async def drm_handler(bot: Client, m: Message):
             except Exception:
                 res = "UN"
 
-            await editable.edit("**(2). Enter Batch Name or send /unknow if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
+            await editable.edit("**(2). Enter Batch Name or send            /unknow if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
             try:
                 input_bn: Message = await bot.listen(editable.chat.id, filters=filters.text & filters.user(m.from_user.id))
                 raw_text0 = input_bn.text
