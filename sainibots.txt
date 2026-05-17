@@ -49,3 +49,5 @@ google-auth-httplib2
 google-api-python-client
 ffmpeg-python
 pillow
+PyPDF2
+reportlab
