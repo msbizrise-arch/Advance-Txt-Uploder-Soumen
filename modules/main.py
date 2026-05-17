@@ -54,7 +54,7 @@ keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("✨ All Commands", callback_data="cmd_command")],
             [InlineKeyboardButton("💎 All Features", callback_data="feat_command"), InlineKeyboardButton("⚙️ Settings", callback_data="setttings")],
             [InlineKeyboardButton("💳 Premium Plans", callback_data="upgrade_command")],
-            [InlineKeyboardButton(text="🔍 Developer", url="https://t.me/SmartBoy_ApnaMS"), InlineKeyboardButton(text="👑 Owner", url="https://t.me/MR_Toxic_1")],
+            [InlineKeyboardButton(text="🔍Developer", url="https://t.me/SmartBoy_ApnaMS"), InlineKeyboardButton(text="👑 Owner", url="https://t.me/MR_Toxic_1")],
         ])      
 
 @bot.on_message(filters.command("start"))
@@ -74,7 +74,7 @@ async def start(bot, m: Message):
         )
     else:
         caption = (
-            f"𝐇𝐞𝐥𝐥𝐨🙈 **{m.from_user.first_name}** 👋!\n\n"
+            f"𝐇𝐞𝐥𝐥𝐨🌚 **{m.from_user.first_name}** 👋!\n\n"
             f"➠ 𝐈 𝐚𝐦 𝐚 𝐓𝐞𝐱𝐭 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
             f"➠ Can Extract Videos & PDFs From Your Text File and Upload to Telegram!\n\n"
             f"**You are currently using the free version.** 🆓\n"
