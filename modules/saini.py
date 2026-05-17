@@ -250,16 +250,88 @@ async def download_video(url,cmd, name):
         return os.path.isfile.splitext[0] + "." + "mp4"
 
 
-async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, channel_id):
+async def apply_pdf_watermark(input_pdf, output_pdf, watermark_text):
+    """Apply a diagonal text watermark to every page of a PDF using reportlab + PyPDF2."""
+    try:
+        import io
+        from reportlab.pdfgen import canvas
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib.colors import Color
+        from PyPDF2 import PdfReader, PdfWriter
+
+        reader = PdfReader(input_pdf)
+        writer = PdfWriter()
+
+        for page in reader.pages:
+            # Get page size
+            page_width = float(page.mediabox.width)
+            page_height = float(page.mediabox.height)
+
+            # Create watermark on a temp buffer
+            packet = io.BytesIO()
+            c = canvas.Canvas(packet, pagesize=(page_width, page_height))
+            c.saveState()
+            # 30% opacity white text on top-right area with 45° rotation
+            c.setFillColor(Color(1, 1, 1, alpha=0.3))
+            c.setFont("Helvetica-Bold", max(12, int(page_width / 25)))
+            # Translate to top-right, rotate 45 degrees
+            c.translate(page_width * 0.72, page_height * 0.75)
+            c.rotate(45)
+            c.drawCentredString(0, 0, watermark_text)
+            c.restoreState()
+            c.save()
+
+            packet.seek(0)
+            from PyPDF2 import PdfReader as PR
+            wm_reader = PR(packet)
+            wm_page = wm_reader.pages[0]
+            page.merge_page(wm_page)
+            writer.add_page(page)
+
+        with open(output_pdf, "wb") as f_out:
+            writer.write(f_out)
+        return True
+    except Exception as e:
+        print(f"PDF watermark error: {e}")
+        return False
+
+
+async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, channel_id, pdfwatermark="/d", pdfthumb="/d"):
     reply = await bot.send_message(channel_id, f"Downloading pdf:\n<pre><code>{name}</code></pre>")
     time.sleep(1)
     start_time = time.time()
-    await bot.send_document(ka, caption=cc1)
-    count+=1
-    await reply.delete (True)
+
+    final_pdf = ka
+    watermarked = False
+
+    # Apply PDF watermark if set
+    if pdfwatermark and pdfwatermark != "/d":
+        wm_output = f"wm_{ka}"
+        success = await apply_pdf_watermark(ka, wm_output, pdfwatermark)
+        if success and os.path.exists(wm_output):
+            final_pdf = wm_output
+            watermarked = True
+
+    # Resolve thumbnail
+    thumbnail = None
+    if pdfthumb and pdfthumb != "/d":
+        thumbnail = pdfthumb
+
+    reply_up = await bot.send_message(channel_id, f"**📩 Uploading PDF 📩:-**\n<blockquote>**{name}**</blockquote>")
+    try:
+        await bot.send_document(channel_id, final_pdf, caption=cc1, thumb=thumbnail)
+    except Exception:
+        await bot.send_document(channel_id, final_pdf, caption=cc1)
+
+    count += 1
+    await reply.delete(True)
+    await reply_up.delete(True)
     time.sleep(1)
-    os.remove(ka)
-    time.sleep(3) 
+    if watermarked and os.path.exists(final_pdf):
+        os.remove(final_pdf)
+    if os.path.exists(ka):
+        os.remove(ka)
+    time.sleep(3)
 
 
 def decrypt_file(file_path, key):  
@@ -302,7 +374,7 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
             w_filename = f"w_{filename}"
             font_path = "vidwater.ttf"
             subprocess.run(
-                f'ffmpeg -i "{filename}" -vf "drawtext=fontfile={font_path}:text=\'{vidwatermark}\':fontcolor=white@0.3:fontsize=h/6:x=(w-text_w)/2:y=(h-text_h)/2" -codec:a copy "{w_filename}"',
+                f'ffmpeg -i "{filename}" -vf "drawtext=fontfile={font_path}:text=\'{vidwatermark}\':fontcolor=white@0.3:fontsize=h/14:x=w-text_w-20:y=20:angle=-0.785398" -codec:a copy "{w_filename}"',
                 shell=True
             )
             

@@ -64,6 +64,8 @@ async def drm_handler(bot: Client, m: Message):
     cptoken = globals.cptoken
     pwtoken = globals.pwtoken
     vidwatermark = globals.vidwatermark
+    pdfwatermark = globals.pdfwatermark
+    pdfthumb = globals.pdfthumb
     raw_text2 = globals.raw_text2
     quality = globals.quality
     res = globals.res
@@ -551,9 +553,8 @@ async def drm_handler(bot: Client, m: Message):
                 if "drive" in url:
                     try:
                         ka = await helper.download(url, name)
-                        copy = await bot.send_document(chat_id=channel_id,document=ka, caption=cc1)
+                        await helper.send_doc(bot, m, None, ka, cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
                         count+=1
-                        os.remove(ka)
                     except FloodWait as e:
                         await m.reply_text(str(e))
                         time.sleep(e.x)
@@ -577,9 +578,8 @@ async def drm_handler(bot: Client, m: Message):
                                     with open(f'{namef}.pdf', 'wb') as file:
                                         file.write(response.content)
                                     await asyncio.sleep(retry_delay)  # Optional, to prevent spamming
-                                    copy = await bot.send_document(chat_id=channel_id, document=f'{namef}.pdf', caption=cc1)
+                                    await helper.send_doc(bot, m, None, f'{namef}.pdf', cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
                                     count += 1
-                                    os.remove(f'{namef}.pdf')
                                     success = True
                                     break  # Exit the retry loop if successful
                                 else:
@@ -599,9 +599,8 @@ async def drm_handler(bot: Client, m: Message):
                             cmd = f'yt-dlp -o "{namef}.pdf" "{url}"'
                             download_cmd = f"{cmd} -R 25 --fragment-retries 25"
                             os.system(download_cmd)
-                            copy = await bot.send_document(chat_id=channel_id, document=f'{namef}.pdf', caption=cc1)
+                            await helper.send_doc(bot, m, None, f'{namef}.pdf', cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
                             count += 1
-                            os.remove(f'{namef}.pdf')
                         except FloodWait as e:
                             await m.reply_text(str(e))
                             time.sleep(e.x)

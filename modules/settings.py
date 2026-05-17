@@ -159,15 +159,28 @@ def register_settings_handlers(bot):
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("pddf_thumbnail_command"))
     async def pdf_thumbnail_button(client, callback_query):
-      keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]])
-      caption = ("<b>⋅ This Feature is Not Working Yet ⋅</b>")
-      await callback_query.message.edit_media(
-        InputMediaPhoto(
-            media="https://graph.org/file/4f489f48098e89b7240b2-0c35f0c5a758db2cb1.jpg",
-            caption=caption
-        ),
-        reply_markup=keyboard
-      )
+        user_id = callback_query.from_user.id
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]])
+        editable = await callback_query.message.edit(
+            f"**Send PDF Thumbnail URL or Send /d to disable**\n"
+            f"<blockquote><b>Note:</b> Send a direct image URL (http/https) to use as PDF document thumbnail.</blockquote>",
+            reply_markup=keyboard
+        )
+        input_msg = await bot.listen(editable.chat.id)
+        try:
+            if input_msg.text.lower() == "/d":
+                globals.pdfthumb = "/d"
+                await editable.edit(f"✅ PDF Thumbnail disabled !", reply_markup=keyboard)
+            elif input_msg.text.startswith("http://") or input_msg.text.startswith("https://"):
+                globals.pdfthumb = input_msg.text
+                await editable.edit(f"✅ PDF Thumbnail set successfully from URL !", reply_markup=keyboard)
+            else:
+                globals.pdfthumb = input_msg.text
+                await editable.edit(f"✅ PDF Thumbnail `{globals.pdfthumb}` saved !", reply_markup=keyboard)
+        except Exception as e:
+            await editable.edit(f"<b>❌ Failed to set PDF Thumbnail:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
+        finally:
+            await input_msg.delete()
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("add_credit_command"))
     async def credit(client, callback_query):
@@ -253,15 +266,26 @@ def register_settings_handlers(bot):
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("pdf_wateermark_command"))
     async def pdf_watermark_button(client, callback_query):
-      keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]])
-      caption = ("<b>⋅ This Feature is Not Working Yet ⋅</b>")
-      await callback_query.message.edit_media(
-        InputMediaPhoto(
-            media="https://envs.sh/GVI.jpg",
-            caption=caption
-        ),
-        reply_markup=keyboard
-      )
+        user_id = callback_query.from_user.id
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]])
+        editable = await callback_query.message.edit(
+            f"**Send PDF Watermark text or Send /d to disable**\n"
+            f"<blockquote><b>Note:</b> Only text supported (e.g. Salman Khan, Munna). "
+            f"It will appear at top-right on every PDF page with 30% opacity at 45° angle.</blockquote>",
+            reply_markup=keyboard
+        )
+        input_msg = await bot.listen(editable.chat.id)
+        try:
+            if input_msg.text.lower() == "/d":
+                globals.pdfwatermark = "/d"
+                await editable.edit(f"**PDF Watermark Disabled ✅** !", reply_markup=keyboard)
+            else:
+                globals.pdfwatermark = input_msg.text
+                await editable.edit(f"PDF Watermark `{globals.pdfwatermark}` enabled ✅!", reply_markup=keyboard)
+        except Exception as e:
+            await editable.edit(f"<b>❌ Failed to set PDF Watermark:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
+        finally:
+            await input_msg.delete()
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("quality_command"))
     async def handle_quality(client, callback_query):
@@ -344,6 +368,8 @@ def register_settings_handlers(bot):
                 globals.cptoken = "cptoken"
                 globals.pwtoken = "pwtoken"
                 globals.vidwatermark = '/d'
+                globals.pdfwatermark = '/d'
+                globals.pdfthumb = '/d'
                 globals.raw_text2 = '480'
                 globals.quality = '480p'
                 globals.res = '854x480'

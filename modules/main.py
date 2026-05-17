@@ -18,6 +18,7 @@ import globals
 from logs import logging
 from html_handler import register_html_handlers
 from drm_handler import register_drm_handlers
+from pdf_rename import register_pdf_rename_handlers
 from text_handler import register_text_handlers
 from features import register_feature_handlers
 from upgrade import register_upgrade_handlers
@@ -196,6 +197,7 @@ register_broadcast_handlers(bot)
 register_youtube_handlers(bot)
 register_authorisation_handlers(bot)
 register_drm_handlers(bot)
+register_pdf_rename_handlers(bot)
 #==================================================================
 
 def notify_owner():
@@ -220,6 +222,7 @@ def reset_and_set_commands():
         {"command": "ytm", "description": "🎶 YouTube → .mp3 downloader"},
         {"command": "t2t", "description": "📟 Text → .txt Generator"},
         {"command": "t2h", "description": "🌐 .txt → .html Converter"},
+        {"command": "pdfrename", "description": "📄 Rename a PDF file"},
         {"command": "logs", "description": "👁️ View Bot Activity"},
     ]
     # Owner ke liye extra commands
