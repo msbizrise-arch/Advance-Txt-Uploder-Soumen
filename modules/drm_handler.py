@@ -615,15 +615,22 @@ async def drm_handler(bot: Client, m: Message):
                             
                     else:
                         try:
-                            cmd = f'yt-dlp -o "{namef}.pdf" "{url}"'
-                            download_cmd = f"{cmd} -R 25 --fragment-retries 25"
-                            os.system(download_cmd)
-                            await helper.send_doc(bot, m, None, f'{namef}.pdf', cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
+                            cmd = f'yt-dlp -o "{namef}.pdf" "{url}" -R 25 --fragment-retries 25'
+                            result = subprocess.run(cmd, shell=True, timeout=300)
+                            if os.path.exists(f'{namef}.pdf'):
+                                await helper.send_doc(bot, m, None, f'{namef}.pdf', cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
+                            else:
+                                await bot.send_message(channel_id, f"⚠️ PDF download failed: `{name}`")
                             count += 1
+                        except subprocess.TimeoutExpired:
+                            await bot.send_message(channel_id, f"⏰ PDF download timed out: `{name}`")
+                            count += 1
+                            failed_count += 1
+                            continue
                         except FloodWait as e:
                             await m.reply_text(str(e))
                             time.sleep(e.x)
-                            continue    
+                            continue
            
                 elif any(ext in url for ext in [".jpg", ".jpeg", ".png"]):
                     try:
@@ -770,4 +777,10 @@ def register_drm_handlers(bot):
 
     @bot.on_message(filters.private & (filters.document | filters.text))
     async def call_drm_handler(bot: Client, m: Message):
+        # Skip all bot commands (e.g. /pdfrename, /start, /stop etc.)
+        if m.text and m.text.startswith("/"):
+            return
+        # Skip non-.txt documents (e.g. PDF sent by user in pdfrename flow)
+        if m.document and not m.document.file_name.endswith(".txt"):
+            return
         await drm_handler(bot, m)
