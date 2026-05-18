@@ -148,7 +148,17 @@ def register_pdf_rename_handlers(bot):
         local_thumb = None
         if pdfthumb and pdfthumb != "/d":
             from saini import download_pdf_thumbnail
-            local_thumb = await download_pdf_thumbnail(pdfthumb, bot=bot)
+            try:
+                local_thumb = await asyncio.wait_for(
+                    download_pdf_thumbnail(pdfthumb, bot=bot),
+                    timeout=45
+                )
+            except asyncio.TimeoutError:
+                print("[pdf_rename] pdfthumb download timed out (45s), skipping")
+                local_thumb = None
+            except Exception as e:
+                print(f"[pdf_rename] pdfthumb download error: {e}")
+                local_thumb = None
             if local_thumb and os.path.exists(local_thumb):
                 thumbnail = local_thumb
 
