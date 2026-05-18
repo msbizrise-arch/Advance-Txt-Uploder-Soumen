@@ -77,7 +77,7 @@ async def start(bot, m: Message):
         )
     else:
         caption = (
-            f"𝐇𝐞𝐥𝐥𝐨🌚 **{m.from_user.first_name}** 👋!\n\n"
+            f"𝐇𝐞𝐥𝐥𝐨😉 **{m.from_user.first_name}** 👋!\n\n"
             f"➠ 𝐈 𝐚𝐦 𝐚 𝐓𝐞𝐱𝐭 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
             f"➠ Can Extract Videos & PDFs From Your Text File and Upload to Telegram!\n\n"
             f"**You are currently using the free version.** 🆓\n"
