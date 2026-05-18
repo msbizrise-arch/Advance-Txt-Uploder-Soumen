@@ -325,11 +325,9 @@ async def drm_handler(bot: Client, m: Message):
             path = os.path.join("downloads", "Free Batch")
             await editable.delete()
         
-    if thumb.startswith("http://") or thumb.startswith("https://"):
-        getstatusoutput(f"wget '{thumb}' -O 'thumb.jpg'")
-        thumb = "thumb.jpg"
-    else:
-        thumb = thumb
+    # Pass thumb URL directly — send_vid handles download with 25s timeout & fallback
+    # No pre-download needed here anymore
+    # thumb stays as URL or "/d" as-is
 #........................................................................................................................................................................................
     try:
         if m.document and raw_text == "1":

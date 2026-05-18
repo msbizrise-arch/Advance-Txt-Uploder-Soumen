@@ -142,22 +142,15 @@ def register_pdf_rename_handlers(bot):
         )
 
         # Resolve pdfthumb — must be local file for Pyrogram
+        # Uses download_pdf_thumbnail: 5 retries, 45s total, graph.org .jpg support
         pdfthumb = globals.pdfthumb
         thumbnail = None
         local_thumb = None
         if pdfthumb and pdfthumb != "/d":
-            if pdfthumb.startswith("http://") or pdfthumb.startswith("https://"):
-                local_thumb = f"pdfthumb_{uuid.uuid4().hex}.jpg"
-                try:
-                    dl = requests.get(pdfthumb, timeout=15)
-                    if dl.status_code == 200:
-                        with open(local_thumb, "wb") as tf:
-                            tf.write(dl.content)
-                        thumbnail = local_thumb
-                except Exception as e:
-                    print(f"PDF thumb download failed: {e}")
-            elif os.path.exists(pdfthumb):
-                thumbnail = pdfthumb
+            from saini import download_pdf_thumbnail
+            local_thumb = await download_pdf_thumbnail(pdfthumb)
+            if local_thumb and os.path.exists(local_thumb):
+                thumbnail = local_thumb
 
         try:
             try:
