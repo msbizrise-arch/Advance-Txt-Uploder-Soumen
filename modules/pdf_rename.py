@@ -12,7 +12,7 @@ from vars import AUTH_USERS, CREDIT
 
 def register_pdf_rename_handlers(bot):
 
-    @bot.on_message(filters.command("pdfrename") & filters.private)
+    @bot.on_message(filters.command(["pdfrename", "pdf"]) & filters.private)
     async def pdf_rename_cmd(client, m: Message):
         """
         /pdfrename — 3-step PDF rename:

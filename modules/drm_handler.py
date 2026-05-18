@@ -416,7 +416,7 @@ async def drm_handler(bot: Client, m: Message):
                         url = re.search(r"(https://.*?playlist.m3u8.*?)\"", text).group(1)
 
             if "acecwply" in url:
-                cmd = f'yt-dlp -o "{name}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
+                cmd = f'yt-dlp -o "{namef}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
          
             elif "https://cpvod.testbook.com/" in url or "classplusapp.com/drm/" in url:
                 url = url.replace("https://cpvod.testbook.com/","https://media-cdn.classplusapp.com/drm/")
@@ -485,15 +485,15 @@ async def drm_handler(bot: Client, m: Message):
                 ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
            
             if "jw-prod" in url:
-                cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
+                cmd = f'yt-dlp -o "{namef}.mp4" "{url}"'
             elif "webvideos.classplusapp." in url:
-               cmd = f'yt-dlp --add-header "referer:https://web.classplusapp.com/" --add-header "x-cdn-tag:empty" -f "{ytf}" "{url}" -o "{name}.mp4"'
+               cmd = f'yt-dlp --add-header "referer:https://web.classplusapp.com/" --add-header "x-cdn-tag:empty" -f "{ytf}" "{url}" -o "{namef}.mp4"'
             elif "youtube.com" in url or "youtu.be" in url:
-                cmd = f'yt-dlp --cookies youtube_cookies.txt -f "{ytf}" "{url}" -o "{name}".mp4'
+                cmd = f'yt-dlp --cookies youtube_cookies.txt -f "{ytf}" "{url}" -o "{namef}".mp4'
             elif "anonymouspwplayer" in url:
-                cmd = f'yt-dlp --add-header "Referer:https://www.pw.live/" --add-header "Origin:https://www.pw.live" -f "{ytf}" -o "{name}.mp4" "{url}"'
+                cmd = f'yt-dlp --add-header "Referer:https://www.pw.live/" --add-header "Origin:https://www.pw.live" -f "{ytf}" -o "{namef}.mp4" "{url}"'
             else:
-                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
+                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{namef}.mp4"'
 #........................................................................................................................................................................................
             try:
                 if m.text:
@@ -571,7 +571,7 @@ async def drm_handler(bot: Client, m: Message):
 #........................................................................................................................................................................................           
                 if "drive" in url:
                     try:
-                        ka = await helper.download(url, name)
+                        ka = await helper.download(url, namef)
                         await helper.send_doc(bot, m, None, ka, cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
                         count+=1
                     except FloodWait as e:
@@ -663,7 +663,7 @@ async def drm_handler(bot: Client, m: Message):
                 elif 'encrypted.m' in url:    
                     prog = await bot.send_message(channel_id, Show, disable_web_page_preview=True)
                     prog1 = await m.reply_text(Show1, disable_web_page_preview=True)
-                    res_file = await helper.download_and_decrypt_video(url, cmd, name, appxkey)  
+                    res_file = await helper.download_and_decrypt_video(url, cmd, namef, appxkey)  
                     filename = res_file  
                     await prog1.delete(True)
                     await prog.delete(True)
@@ -675,7 +675,7 @@ async def drm_handler(bot: Client, m: Message):
                 elif 'drmcdni' in url or 'drm/wv' in url or 'drm/common' in url:
                     prog = await bot.send_message(channel_id, Show, disable_web_page_preview=True)
                     prog1 = await m.reply_text(Show1, disable_web_page_preview=True)
-                    res_file = await helper.decrypt_and_merge_video(mpd, keys_string, path, name, raw_text2)
+                    res_file = await helper.decrypt_and_merge_video(mpd, keys_string, path, namef, raw_text2)
                     filename = res_file
                     await prog1.delete(True)
                     await prog.delete(True)
@@ -687,7 +687,7 @@ async def drm_handler(bot: Client, m: Message):
                 else:
                     prog = await bot.send_message(channel_id, Show, disable_web_page_preview=True)
                     prog1 = await m.reply_text(Show1, disable_web_page_preview=True)
-                    res_file = await helper.download_video(url, cmd, name)
+                    res_file = await helper.download_video(url, cmd, namef)
                     filename = res_file
                     await prog1.delete(True)
                     await prog.delete(True)

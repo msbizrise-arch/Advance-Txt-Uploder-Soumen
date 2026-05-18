@@ -198,8 +198,8 @@ register_commands_handlers(bot)
 register_broadcast_handlers(bot)
 register_youtube_handlers(bot)
 register_authorisation_handlers(bot)
+register_pdf_rename_handlers(bot)  # MUST be before drm_handlers so /pdfrename is caught first
 register_drm_handlers(bot)
-register_pdf_rename_handlers(bot)
 #==================================================================
 
 def notify_owner():
@@ -225,6 +225,7 @@ def reset_and_set_commands():
         {"command": "t2t", "description": "📟 Text → .txt Generator"},
         {"command": "t2h", "description": "🌐 .txt → .html Converter"},
         {"command": "pdfrename", "description": "📄 Rename a PDF file"},
+        {"command": "pdf", "description": "📄 Rename a PDF file (shortcut)"},
         {"command": "logs", "description": "👁️ View Bot Activity"},
     ]
     # Owner ke liye extra commands
