@@ -311,20 +311,42 @@ async def apply_pdf_watermark(input_pdf, output_pdf, watermark_text):
         return False
 
 
-# ── PDF Thumbnail downloader — graph.org .jpg URL support, 5 retries, 45s timeout ──
-async def download_pdf_thumbnail(pdfthumb_url: str) -> str | None:
+# ── PDF Thumbnail downloader — graph.org .jpg URL support + Telegram file_id support ──
+async def download_pdf_thumbnail(pdfthumb_url: str, bot=None) -> str | None:
     """
-    Download thumbnail from URL (especially graph.org .jpg links).
+    Download thumbnail from URL (especially graph.org .jpg links) OR
+    download from Telegram using file_id (when bot is provided).
     Returns local file path on success, None on failure.
-    5 retries, 45 second timeout total.
+    URL: 5 retries, 45 second timeout total.
+    Telegram file_id: direct download via bot.download_media().
     """
     import uuid
     if not pdfthumb_url or pdfthumb_url == "/d":
         return None
-    if not (pdfthumb_url.startswith("http://") or pdfthumb_url.startswith("https://")):
-        # Local file path
-        return pdfthumb_url if os.path.exists(pdfthumb_url) else None
 
+    # ── Case 1: Telegram file_id (not a URL, not a local path) ─────────────
+    if not (pdfthumb_url.startswith("http://") or pdfthumb_url.startswith("https://")):
+        # Could be local file path OR Telegram file_id
+        if os.path.exists(pdfthumb_url):
+            return pdfthumb_url
+        # It's a Telegram file_id — need bot to download it
+        if bot is not None:
+            local_thumb = f"pdfthumb_tg_{uuid.uuid4().hex}.jpg"
+            try:
+                downloaded = await bot.download_media(pdfthumb_url, file_name=local_thumb)
+                if downloaded and os.path.exists(downloaded):
+                    print(f"PDF thumb downloaded from Telegram file_id: {downloaded}")
+                    return downloaded
+                else:
+                    print(f"PDF thumb Telegram download returned: {downloaded}")
+            except Exception as e:
+                print(f"PDF thumb Telegram file_id download error: {e}")
+            return None
+        else:
+            print(f"PDF thumb is Telegram file_id but no bot provided, skipping thumbnail.")
+            return None
+
+    # ── Case 2: HTTP/HTTPS URL ───────────────────────────────────────────────
     local_thumb = f"pdfthumb_{uuid.uuid4().hex}.jpg"
     max_retries = 5
     timeout_per_attempt = 9  # 5 retries x 9s = 45s total
@@ -383,10 +405,10 @@ async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, chan
             final_pdf = wm_output
             watermarked = True
 
-    # ── PDF Thumbnail — 5 retries, 45s total, graph.org .jpg support ──
+    # ── PDF Thumbnail — 5 retries, 45s total, graph.org .jpg + Telegram file_id support ──
     thumbnail = None
     if pdfthumb and pdfthumb != "/d":
-        local_thumb = await download_pdf_thumbnail(pdfthumb)
+        local_thumb = await download_pdf_thumbnail(pdfthumb, bot=bot)
         if local_thumb and os.path.exists(local_thumb):
             thumbnail = local_thumb
         else:

@@ -24,7 +24,7 @@ def register_feature_handlers(bot):
             [InlineKeyboardButton("🎥 YouTube", callback_data="yt_command")],
             [InlineKeyboardButton("🌐 HTML", callback_data="html_command")],
             [InlineKeyboardButton("📝 Text File", callback_data="txt_maker_command"), InlineKeyboardButton("📢 Broadcast", callback_data="broadcast_command")],
-            [InlineKeyboardButton("📄 PDF Rename", callback_data="pdfrename_command")],
+            [InlineKeyboardButton("📄 PDF Features", callback_data="pdf_features_command")],
             [InlineKeyboardButton("🔙 Back to Main Menu", callback_data="back_to_main_menu")]
         ])
         await callback_query.message.edit_media(
@@ -161,9 +161,31 @@ def register_feature_handlers(bot):
 
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
 
-    @bot.on_callback_query(filters.regex("pdfrename_command"))
+    @bot.on_callback_query(filters.regex("^pdf_features_command$"))
+    async def pdf_features_button(client, callback_query):
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("📄 PDF Rename", callback_data="pdfrename_command")],
+            [InlineKeyboardButton("🖼️ PDF Thumbnail", callback_data="pdfthumb_command")],
+            [InlineKeyboardButton("🔙 Back to Feature", callback_data="feat_command")]
+        ])
+        caption = (
+            "**📄 PDF Features :**\n\n"
+            "◆ **PDF Rename** — Rename any PDF file and re-upload.\n"
+            "◆ **PDF Thumbnail** — Set, view or delete the thumbnail applied to all uploaded PDFs."
+        )
+        await callback_query.message.edit_media(
+            InputMediaPhoto(
+                media="https://graph.org/file/b45300f1cd068ad8f1895-fa23a3a1ad25789597.jpg",
+                caption=caption
+            ),
+            reply_markup=keyboard
+        )
+
+# .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+
+    @bot.on_callback_query(filters.regex("^pdfrename_command$"))
     async def pdfrename_feat_button(client, callback_query):
-      keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Feature", callback_data="feat_command")]])
+      keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to PDF Features", callback_data="pdf_features_command")]])
       caption = (
           f"**📄 PDF Rename Feature:**\n\n"
           f"◆/pdfrename - Rename any PDF file.\n\n"
@@ -172,7 +194,31 @@ def register_feature_handlers(bot):
           f"2. Bot will ask you to send your PDF file\n"
           f"3. Then send the new name (without .pdf)\n"
           f"4. Bot renames and re-uploads with new name\n"
-          f"✅ PDF Thumbnail (if set in Settings) is applied automatically.</blockquote>"
+          f"✅ PDF Thumbnail (if set) is applied automatically.</blockquote>"
+      )
+      await callback_query.message.edit_media(
+        InputMediaPhoto(
+          media="https://graph.org/file/b45300f1cd068ad8f1895-fa23a3a1ad25789597.jpg",
+          caption=caption
+          ),
+          reply_markup=keyboard
+      )
+
+# .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+
+    @bot.on_callback_query(filters.regex("^pdfthumb_command$"))
+    async def pdfthumb_feat_button(client, callback_query):
+      keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to PDF Features", callback_data="pdf_features_command")]])
+      caption = (
+          f"**🖼️ PDF Thumbnail Feature:**\n\n"
+          f"◆/setpdfthumb - Set PDF Thumbnail (URL or Photo)\n"
+          f"◆/viewpdfthumb - View current PDF Thumbnail\n"
+          f"◆/delpdfthumb - Delete PDF Thumbnail\n\n"
+          f"<blockquote><b>How to use:</b>\n"
+          f"1. Send /setpdfthumb command\n"
+          f"2. Send an image URL or directly send a photo\n"
+          f"3. Thumbnail will be applied on all PDF uploads\n"
+          f"✅ Saved even after bot restart.</blockquote>"
       )
       await callback_query.message.edit_media(
         InputMediaPhoto(
