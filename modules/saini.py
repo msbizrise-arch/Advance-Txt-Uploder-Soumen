@@ -451,69 +451,81 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
     reply = await m.reply_text(f"**Generate Thumbnail:**\n<blockquote>**{name}**</blockquote>")
 
     w_filename = filename   # default: no watermark applied
-    local_thumb = None      # local thumb file if downloaded from URL
+    local_thumb = None
 
     # ── Step 1: Apply video watermark BAKED into video ──────────────────────
-    # 90% opacity white text, 15° rotation, top-right corner, burned into video
-    # Timeout: 25 seconds per attempt, max 3 retries. If all fail → skip, use original.
+    # Uses asyncio subprocess — does NOT block event loop
+    # Timeout = max(video_duration * 2, 120) seconds — handles long videos
+    # 3 attempts, if all fail → silently skip, upload original
     if vidwatermark and vidwatermark != "/d":
         wm_out = f"wm_{uuid.uuid4().hex}.mp4"
         font_path = "vidwater.ttf"
-        # Escape single quotes in watermark text for ffmpeg
-        wm_text_escaped = vidwatermark.replace("'", "\\'").replace(":", "\\:")
-        # drawtext: top-right, 90% opacity (fontcolor=white@0.9), 15° rotation
-        # ffmpeg doesn't support per-text rotation in drawtext directly,
-        # so we use a rotated overlay via geq filter alternative.
-        # Best compatible approach: use drawtext with angle via vf overlay with rotate.
+        wm_text_escaped = vidwatermark.replace("'", "\\'").replace(":", "\\:").replace("\\", "\\\\")
+
+        # Calculate dynamic timeout from video duration
+        vid_dur = duration(filename)
+        wm_timeout = max(int(vid_dur * 2), 120)  # minimum 120s, 2x duration for long videos
+
+        wm_cmd = (
+            f'ffmpeg -y -i "{filename}" '
+            f'-vf "drawtext=fontfile={font_path}:'
+            f"text='{wm_text_escaped}':"
+            f'fontcolor=white@0.9:fontsize=h/16:'
+            f'x=w-text_w-30:y=30:'
+            f'shadowcolor=black@0.5:shadowx=2:shadowy=2" '
+            f'-codec:v libx264 -preset ultrafast -crf 28 -codec:a copy "{wm_out}"'
+        )
+
         wm_applied = False
-        for attempt in range(1, 4):  # 3 retries
+        for attempt in range(1, 4):  # 3 attempts
             try:
-                wm_cmd = (
-                    f'ffmpeg -y -i "{filename}" '
-                    f'-vf "drawtext=fontfile={font_path}:'
-                    f"text='{wm_text_escaped}':"
-                    f'fontcolor=white@0.9:fontsize=h/16:'
-                    f'x=w-text_w-30:y=30:'
-                    f'shadowcolor=black@0.5:shadowx=2:shadowy=2" '
-                    f'-codec:a copy "{wm_out}"'
+                proc = await asyncio.create_subprocess_shell(
+                    wm_cmd,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE
                 )
-                result = subprocess.run(wm_cmd, shell=True, timeout=25)
-                if result.returncode == 0 and os.path.exists(wm_out) and os.path.getsize(wm_out) > 0:
-                    w_filename = wm_out
-                    wm_applied = True
-                    print(f"Video watermark applied OK (attempt {attempt})")
-                    break
-                else:
-                    print(f"Video watermark attempt {attempt} failed (returncode={result.returncode})")
+                try:
+                    await asyncio.wait_for(proc.communicate(), timeout=wm_timeout)
+                    if proc.returncode == 0 and os.path.exists(wm_out) and os.path.getsize(wm_out) > 0:
+                        w_filename = wm_out
+                        wm_applied = True
+                        print(f"Video watermark OK (attempt {attempt})")
+                        break
+                    else:
+                        print(f"Video watermark attempt {attempt} failed rc={proc.returncode}")
+                        if os.path.exists(wm_out):
+                            os.remove(wm_out)
+                except asyncio.TimeoutError:
+                    print(f"Video watermark attempt {attempt} timed out ({wm_timeout}s), killing")
+                    try:
+                        proc.kill()
+                        await proc.communicate()
+                    except Exception:
+                        pass
                     if os.path.exists(wm_out):
                         os.remove(wm_out)
-            except subprocess.TimeoutExpired:
-                print(f"Video watermark attempt {attempt} timed out (25s)")
-                if os.path.exists(wm_out):
-                    os.remove(wm_out)
             except Exception as e:
                 print(f"Video watermark attempt {attempt} error: {e}")
                 if os.path.exists(wm_out):
                     os.remove(wm_out)
+
         if not wm_applied:
-            print("Video watermark: all 3 attempts failed, uploading original video.")
+            print("Watermark failed after 3 attempts — uploading original video without watermark.")
             w_filename = filename
 
-    # ── Step 2: Generate thumbnail from watermarked video ────────────────────
-    # Extract frame at 10s from final video (watermarked if applied)
-    # Then optionally overlay with global thumb URL (graph.org .jpg)
+    # ── Step 2: Extract thumbnail frame from final video (watermarked or original) ──
     safe_thumb = f"thumb_{uuid.uuid4().hex}.jpg"
     try:
-        subprocess.run(
+        proc_th = await asyncio.create_subprocess_shell(
             f'ffmpeg -y -i "{w_filename}" -ss 00:00:10 -vframes 1 -update 1 "{safe_thumb}"',
-            shell=True, timeout=25
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
         )
+        await asyncio.wait_for(proc_th.communicate(), timeout=30)
     except Exception:
         pass
 
     # ── Step 3: Resolve thumbnail ────────────────────────────────────────────
-    # If global thumb URL is set (graph.org .jpg), download & use it
-    # Timeout: 25s, skip on failure — video upload continues
     thumbnail = None
     if thumb and thumb != "/d":
         if thumb.startswith("http://") or thumb.startswith("https://"):
@@ -529,7 +541,7 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
                         tf.write(dl.content)
                     thumbnail = local_thumb
                 else:
-                    print(f"Video thumb HTTP {dl.status_code}, falling back to extracted frame")
+                    print(f"Video thumb HTTP {dl.status_code}, using extracted frame")
                     thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
             except Exception as e:
                 print(f"Video thumb download failed ({e}), using extracted frame")
@@ -540,13 +552,12 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
         else:
             thumbnail = thumb if os.path.exists(thumb) else (safe_thumb if os.path.exists(safe_thumb) else None)
     else:
-        # /d or not set — use auto-extracted frame
         thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
 
     dur = int(duration(w_filename))
     start_time = time.time()
 
-    # ── Step 4: Upload as VIDEO (not document), with thumbnail ───────────────
+    # ── Step 4: Upload as VIDEO with thumbnail ────────────────────────────────
     try:
         await bot.send_video(
             channel_id, w_filename, caption=cc,
@@ -555,7 +566,7 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
             progress=progress_bar, progress_args=(reply, start_time)
         )
     except Exception as e1:
-        print(f"send_video failed: {e1}, falling back to send_document")
+        print(f"send_video failed: {e1}, fallback to send_document")
         try:
             await bot.send_document(
                 channel_id, w_filename, caption=cc,
@@ -563,7 +574,7 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
                 progress=progress_bar, progress_args=(reply, start_time)
             )
         except Exception as e2:
-            print(f"send_document fallback also failed: {e2}")
+            print(f"send_document fallback failed: {e2}")
 
     # ── Cleanup ──────────────────────────────────────────────────────────────
     if w_filename != filename and os.path.exists(w_filename):
