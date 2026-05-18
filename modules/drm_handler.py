@@ -83,19 +83,18 @@ async def drm_handler(bot: Client, m: Message):
         lines = content.split("\n")
         os.remove(x)
     elif m.text and "://" in m.text:
-        # Support "Title: URL" format — split on first ": " (colon + space)
-        raw_line = m.text.strip()
-        if ": " in raw_line and not raw_line.startswith("http"):
-            colon_space_idx = raw_line.index(": ")
-            direct_title = raw_line[:colon_space_idx].strip()
-            direct_url_full = raw_line[colon_space_idx + 2:].strip()
-            if "://" in direct_url_full:
-                scheme, rest = direct_url_full.split("://", 1)
-                lines = [f"{direct_title}://{rest}"]
-            else:
-                lines = [raw_line]
-        else:
-            lines = [raw_line]
+        # Support single OR multiple links in format:
+        #   Title: https://url
+        # Multiple links separated by newline:
+        #   Title1: https://url1
+        #   Title2: https://url2
+        raw_lines = m.text.strip().split("\n")
+        lines = []
+        for raw_line in raw_lines:
+            raw_line = raw_line.strip()
+            if not raw_line or "://" not in raw_line:
+                continue
+            lines.append(raw_line)
     else:
         return
 
@@ -117,28 +116,48 @@ async def drm_handler(bot: Client, m: Message):
     
     links = []
     for i in lines:
-        if "://" in i:
-            url = i.split("://", 1)[1]
-            links.append(i.split("://", 1))
-            if ".pdf" in url:
-                pdf_count += 1
-            elif url.endswith((".png", ".jpeg", ".jpg")):
-                img_count += 1
-            elif "v2" in url:
-                v2_count += 1
-            elif "mpd" in url:
-                mpd_count += 1
-            elif "m3u8" in url:
-                m3u8_count += 1
-            elif "drm" in url:
-                drm_count += 1
-            elif "youtu" in url:
-                yt_count += 1
-            elif "zip" in url:
-                zip_count += 1
-            else:
-                other_count += 1
-                    
+        if "://" not in i:
+            continue
+        # Properly parse "Title: https://url" format
+        # URL always starts at http:// or https://
+        # Find the LAST occurrence of http:// or https:// — that's the real URL start
+        url_start = -1
+        for proto in ["https://", "http://"]:
+            idx = i.find(proto)
+            if idx != -1:
+                if url_start == -1 or idx < url_start:
+                    url_start = idx
+
+        if url_start == -1:
+            continue
+
+        title_part = i[:url_start].strip()
+        # Remove trailing colon or ": " from title
+        title_part = title_part.rstrip(": ").strip()
+        url_part = i[url_start:].strip()
+
+        links.append([title_part, url_part.split("://", 1)[1]])
+
+        url_body = url_part
+        if ".pdf" in url_body:
+            pdf_count += 1
+        elif url_body.endswith((".png", ".jpeg", ".jpg")):
+            img_count += 1
+        elif "v2" in url_body:
+            v2_count += 1
+        elif "mpd" in url_body:
+            mpd_count += 1
+        elif "m3u8" in url_body:
+            m3u8_count += 1
+        elif "drm" in url_body:
+            drm_count += 1
+        elif "youtu" in url_body:
+            yt_count += 1
+        elif "zip" in url_body:
+            zip_count += 1
+        else:
+            other_count += 1
+                
     if not links:
         await m.reply_text("<b>🔹Invalid Input.</b>")
         return

@@ -28,6 +28,7 @@ from broadcast import register_broadcast_handlers
 from youtube_handler import register_youtube_handlers
 from authorisation import register_authorisation_handlers
 from vars import API_ID, API_HASH, BOT_TOKEN, OWNER, CREDIT, AUTH_USERS, TOTAL_USERS, cookies_file_path
+import user_store
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
 
 # ── Random image list ────────────────────────────────────────────────────────
@@ -63,6 +64,7 @@ async def start(bot, m: Message):
     user_id = m.chat.id
     if user_id not in TOTAL_USERS:
         TOTAL_USERS.append(user_id)
+    user_store.register_user(m.chat.id)
     user = await bot.get_me()
     mention = user.mention
     if m.chat.id in AUTH_USERS:
@@ -75,7 +77,7 @@ async def start(bot, m: Message):
         )
     else:
         caption = (
-            f"𝐇𝐞𝐥𝐥𝐨😎 **{m.from_user.first_name}** 👋!\n\n"
+            f"𝐇𝐞𝐥𝐥𝐨🌚 **{m.from_user.first_name}** 👋!\n\n"
             f"➠ 𝐈 𝐚𝐦 𝐚 𝐓𝐞𝐱𝐭 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
             f"➠ Can Extract Videos & PDFs From Your Text File and Upload to Telegram!\n\n"
             f"**You are currently using the free version.** 🆓\n"

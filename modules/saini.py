@@ -251,39 +251,50 @@ async def download_video(url,cmd, name):
 
 
 async def apply_pdf_watermark(input_pdf, output_pdf, watermark_text):
-    """Apply a diagonal text watermark to every page of a PDF using reportlab + PyPDF2."""
+    """Apply a diagonal text watermark to every page of a PDF — top-right, 45°, 30% opacity."""
     try:
         import io
         from reportlab.pdfgen import canvas
-        from reportlab.lib.pagesizes import A4
         from reportlab.lib.colors import Color
-        from PyPDF2 import PdfReader, PdfWriter
+
+        # Try pypdf first (newer), fall back to PyPDF2
+        try:
+            from pypdf import PdfReader, PdfWriter
+        except ImportError:
+            from PyPDF2 import PdfReader, PdfWriter
 
         reader = PdfReader(input_pdf)
         writer = PdfWriter()
 
         for page in reader.pages:
-            # Get page size
             page_width = float(page.mediabox.width)
             page_height = float(page.mediabox.height)
 
-            # Create watermark on a temp buffer
+            # Build watermark layer
             packet = io.BytesIO()
             c = canvas.Canvas(packet, pagesize=(page_width, page_height))
             c.saveState()
-            # 30% opacity white text on top-right area with 45° rotation
-            c.setFillColor(Color(1, 1, 1, alpha=0.3))
-            c.setFont("Helvetica-Bold", max(12, int(page_width / 25)))
-            # Translate to top-right, rotate 45 degrees
-            c.translate(page_width * 0.72, page_height * 0.75)
+
+            font_size = max(10, int(page_width / 22))
+            # 30% opacity black text (visible on white background PDFs)
+            c.setFillColor(Color(0, 0, 0, alpha=0.3))
+            c.setFont("Helvetica-Bold", font_size)
+
+            # Top-right area, 45 degree rotation
+            c.translate(page_width * 0.80, page_height * 0.85)
             c.rotate(45)
             c.drawCentredString(0, 0, watermark_text)
             c.restoreState()
             c.save()
 
             packet.seek(0)
-            from PyPDF2 import PdfReader as PR
-            wm_reader = PR(packet)
+
+            try:
+                from pypdf import PdfReader as PR2
+            except ImportError:
+                from PyPDF2 import PdfReader as PR2
+
+            wm_reader = PR2(packet)
             wm_page = wm_reader.pages[0]
             page.merge_page(wm_page)
             writer.add_page(page)
@@ -373,8 +384,15 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
         else:
             w_filename = f"w_{filename}"
             font_path = "vidwater.ttf"
+            # drawtext: top-right position, 30% opacity white, 45° via separate rotate filter
+            # We use two-pass: drawtext at top-right, then no rotation (rotation on text not natively supported cleanly)
+            # Best approach: use geq or overlay. For simplicity use drawtext with x=w-tw-20, y=20 (top-right)
             subprocess.run(
-                f'ffmpeg -i "{filename}" -vf "drawtext=fontfile={font_path}:text=\'{vidwatermark}\':fontcolor=white@0.3:fontsize=h/14:x=w-text_w-20:y=20:angle=-0.785398" -codec:a copy "{w_filename}"',
+                f'ffmpeg -i "{filename}" '
+                f'-vf "drawtext=fontfile={font_path}:text=\'{vidwatermark}\':'
+                f'fontcolor=white@0.3:fontsize=h/14:'
+                f'x=w-text_w-20:y=20" '
+                f'-codec:a copy "{w_filename}"',
                 shell=True
             )
             
