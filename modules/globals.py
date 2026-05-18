@@ -1,3 +1,5 @@
+import os
+import json
 from vars import OWNER, CREDIT
 
 processing_request = False
@@ -11,8 +13,27 @@ cptoken = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYzNjkyNjM0LCJvcmdJZCI6
 pwtoken = "pwtoken"
 vidwatermark = '/d'
 pdfwatermark = '/d'
-pdfthumb = '/d'
 raw_text2 = '480'
 quality = '480p'
 res = '854x480'
 topic = '/d'
+
+# ── pdfthumb — load from persistent store on start ───────────────────────────
+_THUMB_STORE = "pdfthumb_store.json"
+
+def _load_pdfthumb_from_store() -> str:
+    """Bot start par pdfthumb_store.json se last saved thumb load karo."""
+    if os.path.exists(_THUMB_STORE):
+        try:
+            with open(_THUMB_STORE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if data:
+                last_val = list(data.values())[-1]
+                if last_val and last_val != "/d":
+                    print(f"[globals] pdfthumb loaded from store: {str(last_val)[:60]}")
+                    return last_val
+        except Exception as e:
+            print(f"[globals] pdfthumb store load error: {e}")
+    return "/d"
+
+pdfthumb = _load_pdfthumb_from_store()

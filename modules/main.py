@@ -19,6 +19,7 @@ from logs import logging
 from html_handler import register_html_handlers
 from drm_handler import register_drm_handlers
 from pdf_rename import register_pdf_rename_handlers
+from pdfthumb import register_pdfthumb_handlers
 from text_handler import register_text_handlers
 from features import register_feature_handlers
 from upgrade import register_upgrade_handlers
@@ -199,6 +200,7 @@ register_broadcast_handlers(bot)
 register_youtube_handlers(bot)
 register_authorisation_handlers(bot)
 register_pdf_rename_handlers(bot)  # MUST be before drm_handlers so /pdfrename is caught first
+register_pdfthumb_handlers(bot)    # PDF Thumbnail commands: /setpdfthumb /viewpdfthumb /delpdfthumb
 register_drm_handlers(bot)
 #==================================================================
 

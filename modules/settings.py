@@ -162,21 +162,54 @@ def register_settings_handlers(bot):
         user_id = callback_query.from_user.id
         keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]])
         editable = await callback_query.message.edit(
-            f"**Send PDF Thumbnail URL or Send /d to disable**\n"
-            f"<blockquote><b>Note:</b> Send a direct image URL (http/https) to use as PDF document thumbnail.</blockquote>",
+            f"**📸 PDF Thumbnail Set**\n\n"
+            f"Choose any one:\n"
+            f"• **URL bhejo** — `https://graph.org/file/xxx.jpg` (direct image link)\n"
+            f"• **Photo bhejo** — directly Telegram photo upload karo\n"
+            f"• **/d bhejo** — thumbnail disable karo\n\n"
+            f"<blockquote><b>Note:</b> graph.org .jpg URL ya direct Telegram photo — dono kaam karte hain.</blockquote>",
             reply_markup=keyboard
         )
         input_msg = await bot.listen(editable.chat.id)
         try:
-            if input_msg.text.lower() == "/d":
+            # Case 1: /d disable
+            if input_msg.text and input_msg.text.strip().lower() == "/d":
                 globals.pdfthumb = "/d"
+                # Persistent store se bhi hata do
+                from pdfthumb import delete_pdfthumb_for_user
+                delete_pdfthumb_for_user(user_id)
                 await editable.edit(f"✅ PDF Thumbnail disabled !", reply_markup=keyboard)
-            elif input_msg.text.startswith("http://") or input_msg.text.startswith("https://"):
-                globals.pdfthumb = input_msg.text
-                await editable.edit(f"✅ PDF Thumbnail set successfully from URL !", reply_markup=keyboard)
+
+            # Case 2: Direct photo sent in chat
+            elif input_msg.photo:
+                file_id = input_msg.photo.file_id
+                globals.pdfthumb = file_id
+                from pdfthumb import save_pdfthumb_for_user
+                save_pdfthumb_for_user(user_id, file_id)
+                await editable.edit(
+                    f"✅ **PDF Thumbnail set from photo!**\n"
+                    f"<blockquote>Bot restart ke baad bhi saved rahegi.\nUse /viewpdfthumb to preview.</blockquote>",
+                    reply_markup=keyboard
+                )
+
+            # Case 3: URL
+            elif input_msg.text and (input_msg.text.strip().startswith("http://") or input_msg.text.strip().startswith("https://")):
+                url = input_msg.text.strip()
+                globals.pdfthumb = url
+                from pdfthumb import save_pdfthumb_for_user
+                save_pdfthumb_for_user(user_id, url)
+                await editable.edit(
+                    f"✅ **PDF Thumbnail URL set!**\n"
+                    f"<blockquote>`{url[:80]}`\nBot restart ke baad bhi saved rahegi.</blockquote>",
+                    reply_markup=keyboard
+                )
+
             else:
-                globals.pdfthumb = input_msg.text
-                await editable.edit(f"✅ PDF Thumbnail `{globals.pdfthumb}` saved !", reply_markup=keyboard)
+                await editable.edit(
+                    f"❌ Invalid input! URL ya Photo bhejo.\nOr /d to disable.",
+                    reply_markup=keyboard
+                )
+
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set PDF Thumbnail:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
@@ -374,6 +407,11 @@ def register_settings_handlers(bot):
                 globals.quality = '480p'
                 globals.res = '854x480'
                 globals.topic = '/d'
+                # ← pdfthumb persistent store bhi clear karo (settings reset = thumb bhi reset)
+                _THUMB_STORE = "pdfthumb_store.json"
+                import os as _os
+                if _os.path.exists(_THUMB_STORE):
+                    _os.remove(_THUMB_STORE)
                 await editable.edit(f"✅ Settings reset as default !", reply_markup=keyboard)
             else:
                 await editable.edit(f"✅ Settings Not Changed !", reply_markup=keyboard)
