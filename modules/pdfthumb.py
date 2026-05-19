@@ -6,7 +6,7 @@ pdfthumb.py — Persistent PDF Thumbnail System
 • /delpdfthumb  — thumbnail delete karo
 • Bot restart par thumbnail saved rehti hai (JSON file mein)
 • /reset (settings) se thumbnail hata jaati hai
-• Sirf AUTH_USERS use kar sakte hain
+• Sirf AUTH USERS use kar sakte hain
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
