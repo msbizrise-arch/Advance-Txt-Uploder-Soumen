@@ -800,15 +800,38 @@ def register_owner_commands(bot):
         )
 
 #============================================================================================================
+# ── /download eligibility store ──────────────────────────────────────────────
+# chat_id → True means user has used /download and is eligible to send txt/link
+_download_eligible: dict = {}
+
+#============================================================================================================
 def register_drm_handlers(bot):
     register_owner_commands(bot)
 
+    # ── /download command ─────────────────────────────────────────────────────
+    @bot.on_message(filters.command("download") & filters.private)
+    async def download_command_handler(client: Client, m: Message):
+        _download_eligible[m.chat.id] = True
+        await m.reply_text(
+            "✅ **Now you are eligible to Download videos & pdf so Go ahead.**\n\n"
+            "📁 Send your `.txt` file or direct link to start downloading."
+        )
+
+    # ── main drm handler ─────────────────────────────────────────────────────
     @bot.on_message(filters.private & (filters.document | filters.text))
     async def call_drm_handler(bot: Client, m: Message):
-        # Skip all bot commands (e.g. /pdfrename, /start, /stop etc.)
+        # Skip all bot commands — also revokes /download eligibility for any other command
         if m.text and m.text.startswith("/"):
+            if not m.text.startswith("/download"):
+                # Any other command cancels eligibility
+                _download_eligible.pop(m.chat.id, None)
             return
         # Skip non-.txt documents (e.g. PDF sent by user in pdfrename flow)
         if m.document and not m.document.file_name.endswith(".txt"):
             return
+        # Block download unless /download was sent first
+        if not _download_eligible.get(m.chat.id):
+            return
+        # Consume eligibility — one-time use, revoked after this
+        _download_eligible.pop(m.chat.id, None)
         await drm_handler(bot, m)
