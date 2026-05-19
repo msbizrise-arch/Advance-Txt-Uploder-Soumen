@@ -171,7 +171,7 @@ def register_feature_handlers(bot):
         caption = (
             "**📄 PDF Features :**\n\n"
             "◆ **PDF Rename** — Rename any PDF file and re-upload.\n"
-            "◆ **PDF Thumbnail** — Set, view or delete the thumbnail applied to all uploaded PDFs."
+            "◆ **PDF Thumbnail** — ⚠️Temporary Unavailable."
         )
         await callback_query.message.edit_media(
             InputMediaPhoto(
@@ -186,7 +186,7 @@ def register_feature_handlers(bot):
     @bot.on_callback_query(filters.regex("^pdfrename_command$"))
     async def pdfrename_feat_button(client, callback_query):
       keyboard = InlineKeyboardMarkup([
-          [InlineKeyboardButton("🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton("🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
+          [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
           [InlineKeyboardButton("🔙 Back to PDF Features", callback_data="pdf_features_command")]
       ])
       caption = (
@@ -214,7 +214,7 @@ def register_feature_handlers(bot):
     @bot.on_callback_query(filters.regex("^pdfthumb_command$"))
     async def pdfthumb_feat_button(client, callback_query):
       keyboard = InlineKeyboardMarkup([
-          [InlineKeyboardButton("🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton("🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
+          [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
           [InlineKeyboardButton("🔙 Back to PDF Features", callback_data="pdf_features_command")]
       ])
       caption = (
