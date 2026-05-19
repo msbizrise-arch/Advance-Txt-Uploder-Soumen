@@ -141,7 +141,7 @@ def register_pdfthumb_handlers(bot: Client):
         # Cancel check
         if inp.text and inp.text.strip().lower() == "/cancel":
             await editable.edit("❌ Cancelled.")
-            await inp.delete()
+            await inp.delete(True)
             return
 
         # ── Case 1: /d disable ──────────────────────────────────────────────
@@ -152,7 +152,7 @@ def register_pdfthumb_handlers(bot: Client):
                 "✅ **PDF Thumbnail disabled!**\n"
                 "Ab PDF files bina thumbnail ke upload hongi."
             )
-            await inp.delete()
+            await inp.delete(True)
             return
 
         # ── Case 2: Photo directly sent ─────────────────────────────────────
@@ -167,7 +167,7 @@ def register_pdfthumb_handlers(bot: Client):
                 "<blockquote>Ye thumbnail ab sabhi PDF uploads par lagegi.\n"
                 "Bot restart ke baad bhi saved rahegi.</blockquote>"
             )
-            await inp.delete()
+            await inp.delete(True)
             return
 
         # ── Case 3: URL ─────────────────────────────────────────────────────
@@ -206,7 +206,7 @@ def register_pdfthumb_handlers(bot: Client):
                         f"✅ **PDF Thumbnail URL saved!** (could not verify)\n"
                         f"<blockquote>`{url[:80]}`</blockquote>"
                     )
-                await inp.delete()
+                await inp.delete(True)
                 return
             else:
                 await editable.edit(
@@ -214,11 +214,11 @@ def register_pdfthumb_handlers(bot: Client):
                     "URL chahiye (http/https se start ho) ya directly photo bhejo.\n"
                     "Try /setpdfthumb again."
                 )
-                await inp.delete()
+                await inp.delete(True)
                 return
 
         await editable.edit("❌ Kuch samajh nahi aaya. Try /setpdfthumb again.")
-        await inp.delete()
+        await inp.delete(True)
 
     # ── /viewpdfthumb ─────────────────────────────────────────────────────────
     @bot.on_message(filters.command(["viewpdfthumb", "vpdfthumb"]) & filters.private)

@@ -20,6 +20,8 @@ from html_handler import register_html_handlers
 from drm_handler import register_drm_handlers
 from pdf_rename import register_pdf_rename_handlers
 from pdfthumb import register_pdfthumb_handlers
+from video_cover import register_video_cover_handlers, load_global_videocover_on_start
+from video_rename import register_video_rename_handlers
 from text_handler import register_text_handlers
 from features import register_feature_handlers
 from upgrade import register_upgrade_handlers
@@ -202,6 +204,8 @@ register_youtube_handlers(bot)
 register_authorisation_handlers(bot)
 register_pdf_rename_handlers(bot)  # MUST be before drm_handlers so /pdfrename is caught first
 register_pdfthumb_handlers(bot)    # PDF Thumbnail commands: /setpdfthumb /viewpdfthumb /delpdfthumb
+register_video_cover_handlers(bot) # Video Cover commands: /setvideocover /viewvideocover /delvideocover
+register_video_rename_handlers(bot) # Video Rename command: /renamevideo
 register_drm_handlers(bot)
 #==================================================================
 
@@ -228,6 +232,10 @@ def reset_and_set_commands():
         {"command": "t2t", "description": "📟 Text → .txt Generator"},
         {"command": "t2h", "description": "🌐 .txt → .html Converter"},
         {"command": "pdfrename", "description": "📄 Rename a PDF file"},
+        {"command": "renamevideo", "description": "🎥 Rename a Video file"},
+        {"command": "setvideocover", "description": "🖼️ Set Global Video Cover"},
+        {"command": "viewvideocover", "description": "👁️ View Current Video Cover"},
+        {"command": "delvideocover", "description": "❌ Delete Video Cover"},
         {"command": "logs", "description": "👁️ View Bot Activity"},
     ]
     # Owner ke liye extra commands
@@ -255,6 +263,7 @@ def reset_and_set_commands():
     })
     
 if __name__ == "__main__":
+    load_global_videocover_on_start()
     reset_and_set_commands()
     notify_owner() 
 

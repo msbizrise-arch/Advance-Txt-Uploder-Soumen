@@ -44,7 +44,7 @@ def register_pdf_rename_handlers(bot):
 
         if pdf_msg.text and pdf_msg.text.strip().lower() == "/cancel":
             await editable.edit("❌ Cancelled.")
-            await pdf_msg.delete()
+            await pdf_msg.delete(True)
             return
 
         # Delete user's PDF message
@@ -72,11 +72,11 @@ def register_pdf_rename_handlers(bot):
 
         if name_msg.text and name_msg.text.strip().lower() == "/cancel":
             await editable.edit("❌ Cancelled.")
-            await name_msg.delete()
+            await name_msg.delete(True)
             return
 
         new_name_raw = name_msg.text.strip() if name_msg.text else ""
-        await name_msg.delete()
+        await name_msg.delete(True)
 
         # Sanitize
         new_name = "".join(c for c in new_name_raw if c not in r'\/:*?"<>|')
@@ -103,7 +103,7 @@ def register_pdf_rename_handlers(bot):
             batch_msg: Message = await bot.listen(m.chat.id, timeout=120)
             b_text = batch_msg.text.strip() if batch_msg.text else "/unknown"
             b_name = "Unknow Batch😕😂." if b_text.lower() in ["/unknown", "/unknow"] else b_text
-            await batch_msg.delete()
+            await batch_msg.delete(True)
         except asyncio.TimeoutError:
             b_name = "Unknow Batch😕😂."
 

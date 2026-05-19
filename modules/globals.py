@@ -13,6 +13,7 @@ cptoken = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYzNjkyNjM0LCJvcmdJZCI6
 pwtoken = "pwtoken"
 vidwatermark = '/d'
 pdfwatermark = '/d'
+videocover = '/d'
 raw_text2 = '480'
 quality = '480p'
 res = '854x480'
