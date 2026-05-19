@@ -59,8 +59,8 @@ keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("✨ All Commands", callback_data="cmd_command")],
             [InlineKeyboardButton("💎 All Features", callback_data="feat_command"), InlineKeyboardButton("⚙️ Settings", callback_data="setttings")],
             [InlineKeyboardButton("💳 Premium Plans", callback_data="upgrade_command")],
-            [InlineKeyboardButton(text="🔍Developer", url="https://t.me/SmartBoy_ApnaMS"), InlineKeyboardButton(text="👑 Owner", url="https://t.me/MR_Toxic_1")],
-            [InlineKeyboardButton(text="🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton(text="🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
+            [InlineKeyboardButton(text="🔍Developer", url="https://t.me/CinderellaContactBot"), InlineKeyboardButton(text="👑 Owner", url="https://t.me/MR_Toxic_1")],
+            [InlineKeyboardButton(text="💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton(text="💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
         ])      
 
 @bot.on_message(filters.command("start"))
@@ -81,7 +81,7 @@ async def start(bot, m: Message):
         )
     else:
         caption = (
-            f"𝐇𝐞𝐥𝐥𝐨🫩 **{m.from_user.first_name}** 👋!\n\n"
+            f"𝐇𝐞𝐥𝐥𝐨🫣 **{m.from_user.first_name}** 👋!\n\n"
             f"➠ 𝐈 𝐚𝐦 𝐚 𝐓𝐞𝐱𝐭 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
             f"➠ Can Extract Videos & PDFs From Your Text File and Upload to Telegram!\n\n"
             f"**You are currently using the free version.** 🆓\n"
@@ -120,7 +120,7 @@ async def back_to_main_menu(client, callback_query):
 
 @bot.on_message(filters.command(["id"]))
 async def id_command(client, message: Message):
-    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(text="Send to Owner", url=f"tg://openmessage?user_id={OWNER}")]])
+    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(text="Send to Owner💫", url=f"tg://openmessage?user_id={OWNER}")]])
     chat_id = message.chat.id
     text = f"<blockquote expandable><b>The ID of this chat id is:</b></blockquote>\n`{chat_id}`"
     
@@ -175,7 +175,7 @@ async def cancel_handler(client: Client, m: Message):
         print(f"User ID not in AUTH_USERS", m.chat.id)
         await bot.send_message(
             m.chat.id, 
-            f"<blockquote>__**Oopss! You are not a Premium member**__\n"
+            f"<blockquote>__**🙆🏿‍♀️Oopss! You are not a Premium member**__\n"
             f"__**Please Upgrade Your Plan**__\n"
             f"__**Send me your user id for authorization**__\n"
             f"__**Your User id** __- `{m.chat.id}`</blockquote>\n\n"
