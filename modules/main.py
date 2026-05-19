@@ -234,6 +234,7 @@ def reset_and_set_commands():
         {"command": "pdfrename", "description": "📄 Rename a PDF file"},
         {"command": "renamevideo", "description": "🎥 Rename a Video file"},
         {"command": "setvideocover", "description": "🖼️ Set Global Video Cover"},
+        {"command": "changecover", "description": "🔄 Change Cover of a Video"},
         {"command": "viewvideocover", "description": "👁️ View Current Video Cover"},
         {"command": "delvideocover", "description": "❌ Delete Video Cover"},
         {"command": "logs", "description": "👁️ View Bot Activity"},
