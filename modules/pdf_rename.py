@@ -18,12 +18,12 @@ def register_pdf_rename_handlers(bot):
         /pdfrename — 3-step PDF rename:
         1. Bot asks for PDF file
         2. Bot asks for new name
-        3. Bot asks for batch name (like /unknown system in drm_handler)
-        Then re-uploads with cc1 caption style + pdfthumb if set
+        3. Bot asks for batch name (like /unknown system as in direct link)
+        Then re-uploads with cc1 caption style.
         """
         if m.chat.id not in AUTH_USERS:
             await m.reply_text(
-                f"<blockquote>__**Oopss! You are not a Premium member**__\n"
+                f"<blockquote>__**🙆🏿‍♀️Oopss! You are not a Premium member**__\n"
                 f"__**Please Upgrade Your Plan**__\n"
                 f"__**Your User id**__ - `{m.chat.id}`</blockquote>\n"
             )
@@ -102,10 +102,10 @@ def register_pdf_rename_handlers(bot):
         try:
             batch_msg: Message = await bot.listen(m.chat.id, timeout=120)
             b_text = batch_msg.text.strip() if batch_msg.text else "/unknown"
-            b_name = "Unknow Batch😕😂." if b_text.lower() in ["/unknown", "/unknow"] else b_text
+            b_name = "💥Contact: @CinderellaContactBot" if b_text.lower() in ["/unknown", "/unknow"] else b_text
             await batch_msg.delete(True)
         except asyncio.TimeoutError:
-            b_name = "Unknow Batch😕😂."
+            b_name = "💥Contact: @CinderellaContactBot"
 
         await editable.edit("⏳ Downloading PDF... Please wait.")
 
