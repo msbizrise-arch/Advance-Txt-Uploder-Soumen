@@ -149,6 +149,7 @@ def register_settings_handlers(bot):
         await callback_query.message.edit(
             f"**🎥 Video Cover Settings**\n\n"
             f"**Welcome [{first_name}](tg://user?id={user_id})**\n\n"
+            f"**😍You can Change Video Cover Photo Also tap on /changecover to do this.\n\n"
             f"<blockquote>Video Cover globally set hoga jo /renamevideo aur /setvideocover commands mein use hoga.\n"
             f"Sirf Telegram direct photo supported hai.</blockquote>",
             reply_markup=keyboard
@@ -216,7 +217,7 @@ def register_settings_handlers(bot):
     @bot.on_callback_query(filters.regex("pddf_thumbnail_command"))
     async def pdf_thumbnail_button(client, callback_query):
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton("🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
+            [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
             [InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]
         ])
         await callback_query.message.edit(
@@ -295,7 +296,7 @@ def register_settings_handlers(bot):
     @bot.on_callback_query(filters.regex("video_wateermark_command"))
     async def video_watermark(client, callback_query):
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton("🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
+            [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
             [InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]
         ])
         await callback_query.message.edit(
@@ -313,7 +314,7 @@ def register_settings_handlers(bot):
         keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]])
         editable = await callback_query.message.edit(
             f"**Send PDF Watermark text or Send /d to disable**\n"
-            f"<blockquote><b>Note:</b> Only text supported (e.g. Salman Khan, Munna). "
+            f"<blockquote><b>Note:</b> Only text supported (e.g. Sharukh Khan, Munna). "
             f"It will appear at top-right on every PDF page with 30% opacity at 45° angle.</blockquote>",
             reply_markup=keyboard
         )
