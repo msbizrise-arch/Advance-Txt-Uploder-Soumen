@@ -124,10 +124,10 @@ def register_video_rename_handlers(bot: Client):
         try:
             batch_msg: Message = await bot.listen(m.chat.id, timeout=120)
             b_text = batch_msg.text.strip() if batch_msg.text else "/unknown"
-            b_name = "Unknow Batch😕😂." if b_text.lower() in ["/unknown", "/unknow"] else b_text
+            b_name = "💥Contact: @CinderellaContactBot" if b_text.lower() in ["/unknown", "/unknow"] else b_text
             await batch_msg.delete(True)
         except asyncio.TimeoutError:
-            b_name = "Unknow Batch😕😂."
+            b_name = "💥Contact: @CinderellaContactBot"
 
         # ── Step 4: Ask for cover image (or use global cover) ─────────────────
         current_cover = globals.videocover
@@ -138,7 +138,7 @@ def register_video_rename_handlers(bot: Client):
             # Global cover already set — skip asking, use it directly
             cover_file_id = current_cover
             await editable.edit(
-                f"**🎥 Step 4/4**\n\n"
+                f"**wait wait🫷🏻🫸🏻**\n\n"
                 f"✅ Using your **Global Video Cover** from settings.\n\n"
                 f"⏳ Downloading video... Please wait."
             )
