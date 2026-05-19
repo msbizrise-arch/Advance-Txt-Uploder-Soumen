@@ -58,6 +58,7 @@ keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("💎 All Features", callback_data="feat_command"), InlineKeyboardButton("⚙️ Settings", callback_data="setttings")],
             [InlineKeyboardButton("💳 Premium Plans", callback_data="upgrade_command")],
             [InlineKeyboardButton(text="🔍Developer", url="https://t.me/SmartBoy_ApnaMS"), InlineKeyboardButton(text="👑 Owner", url="https://t.me/MR_Toxic_1")],
+            [InlineKeyboardButton(text="🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton(text="🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
         ])      
 
 @bot.on_message(filters.command("start"))

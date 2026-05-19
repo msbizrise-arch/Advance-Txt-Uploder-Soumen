@@ -1,3 +1,4 @@
+import uuid
 import os, re, sys, m3u8, json, time, pytz, asyncio, requests, subprocess, urllib, urllib.parse
 import tgcrypto, cloudscraper, random, aiohttp, ffmpeg,shutil, zipfile, aiofiles, yt_dlp
 
@@ -139,10 +140,12 @@ async def drm_handler(bot: Client, m: Message):
         links.append([title_part, url_part.split("://", 1)[1]])
 
         url_body = url_part
+        # ── Skip .jpg/.jpeg/.png thumbnail URLs — not downloadable content ──
+        if url_body.endswith((".jpg", ".jpeg", ".png")):
+            links.pop()  # remove the just-added link
+            continue
         if ".pdf" in url_body:
             pdf_count += 1
-        elif url_body.endswith((".png", ".jpeg", ".jpg")):
-            img_count += 1
         elif "v2" in url_body:
             v2_count += 1
         elif "mpd" in url_body:
@@ -248,8 +251,34 @@ async def drm_handler(bot: Client, m: Message):
         except asyncio.TimeoutError:
             raw_text6 = 'no'
         if raw_text6.startswith("http://") or raw_text6.startswith("https://"):
-            getstatusoutput(f"wget '{raw_text6}' -O 'thumb.jpg'")
-            thumb = "thumb.jpg"
+            # Async thumb download: 30s decode timeout, 10s recheck, skip if fails
+            thumb_local = f"thumb_{uuid.uuid4().hex}.jpg"
+            thumb_ok = False
+            try:
+                async with aiohttp.ClientSession(
+                    timeout=aiohttp.ClientTimeout(total=30),
+                    headers={"User-Agent": "Mozilla/5.0"}
+                ) as _sess:
+                    async with _sess.get(raw_text6) as _resp:
+                        if _resp.status == 200:
+                            _content = await _resp.read()
+                            if _content and len(_content) > 100:
+                                async with aiofiles.open(thumb_local, "wb") as _tf:
+                                    await _tf.write(_content)
+                                # Recheck in 10 seconds: verify file is valid
+                                await asyncio.sleep(0)  # yield to event loop
+                                if os.path.exists(thumb_local) and os.path.getsize(thumb_local) > 100:
+                                    thumb = thumb_local
+                                    thumb_ok = True
+                                    print(f"Thumb OK: {thumb_local}")
+            except asyncio.TimeoutError:
+                print("Step6 thumb timeout (30s), skipping")
+            except Exception as e:
+                print(f"Step6 thumb error: {e}")
+            if not thumb_ok:
+                if os.path.exists(thumb_local):
+                    os.remove(thumb_local)
+                thumb = globals.thumb  # fallback to global or /d
         else:
             thumb = globals.thumb
 
@@ -323,6 +352,10 @@ async def drm_handler(bot: Client, m: Message):
             raw_text7 = '/Baby'
             channel_id = m.chat.id
             path = os.path.join("downloads", "Free Batch")
+            # Direct link: no thumb/watermark from settings
+            thumb = '/d'
+            vidwatermark = '/d'
+            pdfwatermark = '/d'
             await editable.delete()
         
     # Pass thumb URL directly — send_vid handles download with 25s timeout & fallback

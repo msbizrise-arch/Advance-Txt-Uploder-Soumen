@@ -138,82 +138,33 @@ def register_settings_handlers(bot):
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("viideo_thumbnail_command"))
     async def video_thumbnail(client, callback_query):
-        user_id = callback_query.from_user.id
-        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]])
-        editable = await callback_query.message.edit(f"Send the Video Thumb URL or Send /d \n<blockquote><b>Note </b>- For document format send : No</blockquote>", reply_markup=keyboard)
-        input_msg = await bot.listen(editable.chat.id)
-        try:
-            if input_msg.text.startswith("http://") or input_msg.text.startswith("https://"):
-                globals.thumb = input_msg.text
-                await editable.edit(f"✅ Thumbnail set successfully from the URL !", reply_markup=keyboard)
-            elif input_msg.text.lower() == "/d":
-                globals.thumb = "/d"
-                await editable.edit(f"✅ Thumbnail set to default !", reply_markup=keyboard)
-            else:
-                globals.thumb = input_msg.text
-                await editable.edit(f"✅ Video in Document Format is enabled !", reply_markup=keyboard)
-        except Exception as e:
-            await editable.edit(f"<b>❌ Failed to set thumbnail:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
-        finally:
-            await input_msg.delete()
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton("🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
+            [InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]
+        ])
+        await callback_query.message.edit(
+            "**🎥 Video Thumbnail**\n\n"
+            "⚠️ **Temporary Unavailable**\n"
+            "This feature is not available in this Bot.\n\n"
+            "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+            "If you want to Generate your String Session so use **@Cinderella_StringBot**",
+            reply_markup=keyboard
+        )
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("pddf_thumbnail_command"))
     async def pdf_thumbnail_button(client, callback_query):
-        user_id = callback_query.from_user.id
-        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]])
-        editable = await callback_query.message.edit(
-            f"**📸 PDF Thumbnail Set**\n\n"
-            f"Choose any one:\n"
-            f"• **URL bhejo** — `https://graph.org/file/xxx.jpg` (direct image link)\n"
-            f"• **Photo bhejo** — directly Telegram photo upload karo\n"
-            f"• **/d bhejo** — thumbnail disable karo\n\n"
-            f"<blockquote><b>Note:</b> graph.org .jpg URL ya direct Telegram photo — dono kaam karte hain.</blockquote>",
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton("🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
+            [InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]
+        ])
+        await callback_query.message.edit(
+            "**📸 PDF Thumbnail**\n\n"
+            "⚠️ **Temporary Unavailable**\n"
+            "This feature is not available in this Bot.\n\n"
+            "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+            "If you want to Generate your String Session so use **@Cinderella_StringBot**",
             reply_markup=keyboard
         )
-        input_msg = await bot.listen(editable.chat.id)
-        try:
-            # Case 1: /d disable
-            if input_msg.text and input_msg.text.strip().lower() == "/d":
-                globals.pdfthumb = "/d"
-                # Persistent store se bhi hata do
-                from pdfthumb import delete_pdfthumb_for_user
-                delete_pdfthumb_for_user(user_id)
-                await editable.edit(f"✅ PDF Thumbnail disabled !", reply_markup=keyboard)
-
-            # Case 2: Direct photo sent in chat
-            elif input_msg.photo:
-                file_id = input_msg.photo.file_id
-                globals.pdfthumb = file_id
-                from pdfthumb import save_pdfthumb_for_user
-                save_pdfthumb_for_user(user_id, file_id)
-                await editable.edit(
-                    f"✅ **PDF Thumbnail set from photo!**\n"
-                    f"<blockquote>Bot restart ke baad bhi saved rahegi.\nUse /viewpdfthumb to preview.</blockquote>",
-                    reply_markup=keyboard
-                )
-
-            # Case 3: URL
-            elif input_msg.text and (input_msg.text.strip().startswith("http://") or input_msg.text.strip().startswith("https://")):
-                url = input_msg.text.strip()
-                globals.pdfthumb = url
-                from pdfthumb import save_pdfthumb_for_user
-                save_pdfthumb_for_user(user_id, url)
-                await editable.edit(
-                    f"✅ **PDF Thumbnail URL set!**\n"
-                    f"<blockquote>`{url[:80]}`\nBot restart ke baad bhi saved rahegi.</blockquote>",
-                    reply_markup=keyboard
-                )
-
-            else:
-                await editable.edit(
-                    f"❌ Invalid input! URL ya Photo bhejo.\nOr /d to disable.",
-                    reply_markup=keyboard
-                )
-
-        except Exception as e:
-            await editable.edit(f"<b>❌ Failed to set PDF Thumbnail:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
-        finally:
-            await input_msg.delete()
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("add_credit_command"))
     async def credit(client, callback_query):
@@ -281,21 +232,18 @@ def register_settings_handlers(bot):
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("video_wateermark_command"))
     async def video_watermark(client, callback_query):
-        user_id = callback_query.from_user.id
-        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]])
-        editable = await callback_query.message.edit(f"**Send Video Watermark text or Send /d**", reply_markup=keyboard)
-        input_msg = await bot.listen(editable.chat.id)
-        try:
-            if input_msg.text.lower() == "/d":
-                globals.vidwatermark = "/d"
-                await editable.edit(f"**Video Watermark Disabled ✅** !", reply_markup=keyboard)
-            else:
-                globals.vidwatermark = input_msg.text
-                await editable.edit(f"Video Watermark `{globals.vidwatermark}` enabled ✅!", reply_markup=keyboard)
-        except Exception as e:
-            await editable.edit(f"<b>❌ Failed to set Watermark:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
-        finally:
-            await input_msg.delete()
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🟢 Cinderella String", url="https://t.me/Cinderella_StringBot"), InlineKeyboardButton("🔵 Cinderella Rename", url="https://t.me/Cinderella_renameBot")],
+            [InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]
+        ])
+        await callback_query.message.edit(
+            "**🎥 Video Watermark**\n\n"
+            "⚠️ **Temporary Unavailable**\n"
+            "This feature is not available in this Bot.\n\n"
+            "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+            "If you want to Generate your String Session so use **@Cinderella_StringBot**",
+            reply_markup=keyboard
+        )
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("pdf_wateermark_command"))
     async def pdf_watermark_button(client, callback_query):

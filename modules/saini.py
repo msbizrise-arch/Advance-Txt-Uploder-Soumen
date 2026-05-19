@@ -399,7 +399,7 @@ async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, chan
 
     # Apply PDF watermark if set
     if pdfwatermark and pdfwatermark != "/d":
-        wm_output = f"wm_{uuid.uuid4().hex}.pdf"
+        wm_output = f"{os.path.splitext(ka)[0]}_wm.pdf"  # Keep original name, add _wm suffix only for temp processing
         try:
             success = await asyncio.wait_for(
                 apply_pdf_watermark(ka, wm_output, pdfwatermark),
@@ -489,72 +489,11 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
     reply1 = await bot.send_message(channel_id, f"**📩 Uploading Video 📩:-**\n<blockquote>**{name}**</blockquote>")
     reply = await m.reply_text(f"**Generate Thumbnail:**\n<blockquote>**{name}**</blockquote>")
 
-    w_filename = filename   # default: no watermark applied
-    local_thumb = None
-    wm_applied = False
-
-    # ── Step 1: Apply video watermark BAKED into video ──────────────────────
-    # 90% opacity, 15° rotation, top-right position
-    # Timeout: 25 seconds per attempt, 3 retries max
-    # If all fail → skip watermark, upload original video
-    if vidwatermark and vidwatermark != "/d":
-        wm_out = f"wm_{uuid.uuid4().hex}.mp4"
-        font_path = "vidwater.ttf"
-        wm_text_escaped = vidwatermark.replace("'", "\\'").replace(":", "\\:").replace("\\", "\\\\")
-
-        wm_timeout = 25  # 25 seconds per attempt
-
-        wm_cmd = (
-            f'ffmpeg -y -i "{filename}" '
-            f'-vf "drawtext=fontfile={font_path}:'
-            f"text='{wm_text_escaped}':"
-            f'fontcolor=white@0.9:fontsize=h/16:'
-            f'x=w-text_w-30:y=30:'
-            f'shadowcolor=black@0.5:shadowx=2:shadowy=2" '
-            f'-codec:v libx264 -preset ultrafast -crf 28 -codec:a copy "{wm_out}"'
-        )
-
-        for attempt in range(1, 4):  # 3 attempts
-            try:
-                proc = await asyncio.create_subprocess_shell(
-                    wm_cmd,
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE
-                )
-                try:
-                    await asyncio.wait_for(proc.communicate(), timeout=wm_timeout)
-                    if proc.returncode == 0 and os.path.exists(wm_out) and os.path.getsize(wm_out) > 0:
-                        w_filename = wm_out
-                        wm_applied = True
-                        print(f"Video watermark OK (attempt {attempt})")
-                        break
-                    else:
-                        print(f"Video watermark attempt {attempt} failed rc={proc.returncode}")
-                        if os.path.exists(wm_out):
-                            os.remove(wm_out)
-                except asyncio.TimeoutError:
-                    print(f"Video watermark attempt {attempt} timed out ({wm_timeout}s), killing")
-                    try:
-                        proc.kill()
-                        await proc.communicate()
-                    except Exception:
-                        pass
-                    if os.path.exists(wm_out):
-                        os.remove(wm_out)
-            except Exception as e:
-                print(f"Video watermark attempt {attempt} error: {e}")
-                if os.path.exists(wm_out):
-                    os.remove(wm_out)
-
-        if not wm_applied:
-            print("Watermark failed after 3 attempts — uploading original video without watermark.")
-            w_filename = filename
-
-    # ── Step 2: Extract thumbnail frame from final video (watermarked or original) ──
+    # ── Extract thumbnail frame at 10s from video ──────────────────────────
     safe_thumb = f"thumb_{uuid.uuid4().hex}.jpg"
     try:
         proc_th = await asyncio.create_subprocess_shell(
-            f'ffmpeg -y -i "{w_filename}" -ss 00:00:10 -vframes 1 -update 1 "{safe_thumb}"',
+            f'ffmpeg -y -i "{filename}" -ss 00:00:10 -vframes 1 -update 1 "{safe_thumb}"',
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
@@ -562,112 +501,39 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
     except Exception:
         pass
 
-    # ── Step 2b: Apply watermark on thumbnail image if watermark is set ──
-    # Same position as video: top-right, 90% opacity, 15° rotation
-    if vidwatermark and vidwatermark != "/d":
-        wm_thumb = f"wmthumb_{uuid.uuid4().hex}.jpg"
-        # Determine which thumbnail source to use for watermarking
-        thumb_src = None
-        if thumb and thumb != "/d":
-            if thumb.startswith("http://") or thumb.startswith("https://"):
-                tmp_dl_thumb = f"vthumb_dl_{uuid.uuid4().hex}.jpg"
-                try:
-                    dl = requests.get(thumb, timeout=25, headers={"User-Agent": "Mozilla/5.0"}, stream=True)
-                    if dl.status_code == 200 and len(dl.content) > 0:
-                        with open(tmp_dl_thumb, "wb") as tf:
-                            tf.write(dl.content)
-                        thumb_src = tmp_dl_thumb
-                except Exception:
-                    pass
-            elif os.path.exists(thumb):
-                thumb_src = thumb
-        if not thumb_src and os.path.exists(safe_thumb):
-            thumb_src = safe_thumb
-
-        if thumb_src:
-            try:
-                from PIL import Image, ImageDraw, ImageFont
-                img = Image.open(thumb_src).convert("RGBA")
-                txt_layer = Image.new("RGBA", img.size, (255, 255, 255, 0))
-                draw = ImageDraw.Draw(txt_layer)
-                try:
-                    font_size = max(14, img.width // 22)
-                    font = ImageFont.truetype("vidwater.ttf", font_size)
-                except Exception:
-                    font = ImageFont.load_default()
-                    font_size = 14
-                bbox = draw.textbbox((0, 0), vidwatermark, font=font)
-                tw = bbox[2] - bbox[0]
-                th = bbox[3] - bbox[1]
-                x_pos = img.width - tw - 30
-                y_pos = 30
-                txt_img = Image.new("RGBA", (tw + 20, th + 20), (0, 0, 0, 0))
-                txt_draw = ImageDraw.Draw(txt_img)
-                txt_draw.text((10, 10), vidwatermark, font=font, fill=(255, 255, 255, 230))
-                rotated = txt_img.rotate(15, expand=True, resample=Image.BICUBIC)
-                paste_x = max(0, x_pos - 10)
-                paste_y = max(0, y_pos - 10)
-                img.paste(rotated, (paste_x, paste_y), rotated)
-                final_img = Image.alpha_composite(Image.new("RGBA", img.size, (255, 255, 255, 255)), img)
-                final_img.convert("RGB").save(wm_thumb, "JPEG", quality=90)
-                if os.path.exists(wm_thumb) and os.path.getsize(wm_thumb) > 0:
-                    if thumb_src != safe_thumb and thumb_src != thumb and os.path.exists(thumb_src):
-                        os.remove(thumb_src)
-                    safe_thumb_old = safe_thumb
-                    safe_thumb = wm_thumb
-                    if os.path.exists(safe_thumb_old) and safe_thumb_old != wm_thumb:
-                        os.remove(safe_thumb_old)
-                    print("Watermark applied on thumbnail successfully")
-            except Exception as e:
-                print(f"Thumbnail watermark error: {e}")
-                if os.path.exists(wm_thumb):
-                    os.remove(wm_thumb)
-
-    # ── Step 3: Resolve thumbnail ────────────────────────────────────────────
-    # Timeout: 25 seconds for thumbnail download, skip if fails
+    # ── Resolve thumbnail (thumb URL or fallback to extracted frame) ──────
     thumbnail = None
+    local_thumb = None
     if thumb and thumb != "/d":
         if thumb.startswith("http://") or thumb.startswith("https://"):
-            # If we already have a watermarked thumb with the URL image, use safe_thumb
-            if vidwatermark and vidwatermark != "/d" and os.path.exists(safe_thumb):
-                thumbnail = safe_thumb
-            else:
-                local_thumb = f"vthumb_{uuid.uuid4().hex}.jpg"
-                try:
-                    dl = requests.get(
-                        thumb, timeout=25,
-                        headers={"User-Agent": "Mozilla/5.0"},
-                        stream=True
-                    )
-                    if dl.status_code == 200 and len(dl.content) > 0:
-                        with open(local_thumb, "wb") as tf:
-                            tf.write(dl.content)
-                        thumbnail = local_thumb
-                    else:
-                        print(f"Video thumb HTTP {dl.status_code}, using extracted frame")
-                        thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
-                except Exception as e:
-                    print(f"Video thumb download failed ({e}), using extracted frame")
-                    if os.path.exists(local_thumb):
-                        os.remove(local_thumb)
-                    local_thumb = None
+            local_thumb = f"vthumb_{uuid.uuid4().hex}.jpg"
+            try:
+                dl = requests.get(thumb, timeout=25, headers={"User-Agent": "Mozilla/5.0"}, stream=True)
+                if dl.status_code == 200 and len(dl.content) > 0:
+                    with open(local_thumb, "wb") as tf:
+                        tf.write(dl.content)
+                    thumbnail = local_thumb
+                else:
                     thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
-        else:
-            if thumb.lower() == "no":
+            except Exception:
+                if os.path.exists(local_thumb):
+                    os.remove(local_thumb)
+                local_thumb = None
                 thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
-            else:
-                thumbnail = thumb if os.path.exists(thumb) else (safe_thumb if os.path.exists(safe_thumb) else None)
+        elif thumb.lower() == "no":
+            thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
+        else:
+            thumbnail = thumb if os.path.exists(thumb) else (safe_thumb if os.path.exists(safe_thumb) else None)
     else:
         thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
 
-    dur = int(duration(w_filename))
+    dur = int(duration(filename))
     start_time = time.time()
 
-    # ── Step 4: Upload as VIDEO with thumbnail ────────────────────────────────
-    # Always upload as send_video (not send_document) so it plays as video
+    # ── Upload as VIDEO ────────────────────────────────────────────────────
     try:
         await bot.send_video(
-            channel_id, w_filename, caption=cc,
+            channel_id, filename, caption=cc,
             supports_streaming=True, height=720, width=1280,
             thumb=thumbnail, duration=dur,
             progress=progress_bar, progress_args=(reply, start_time)
@@ -676,25 +542,22 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
         print(f"send_video failed: {e1}, retrying without thumbnail")
         try:
             await bot.send_video(
-                channel_id, w_filename, caption=cc,
+                channel_id, filename, caption=cc,
                 supports_streaming=True, height=720, width=1280,
                 duration=dur,
                 progress=progress_bar, progress_args=(reply, start_time)
             )
         except Exception as e2:
-            print(f"send_video without thumb failed: {e2}, fallback to send_document")
+            print(f"send_video no-thumb failed: {e2}, fallback to document")
             try:
                 await bot.send_document(
-                    channel_id, w_filename, caption=cc,
-                    thumb=thumbnail,
+                    channel_id, filename, caption=cc,
                     progress=progress_bar, progress_args=(reply, start_time)
                 )
             except Exception as e3:
                 print(f"send_document fallback failed: {e3}")
 
-    # ── Cleanup ──────────────────────────────────────────────────────────────
-    if w_filename != filename and os.path.exists(w_filename):
-        os.remove(w_filename)
+    # ── Cleanup ────────────────────────────────────────────────────────────
     if os.path.exists(filename):
         os.remove(filename)
     await reply.delete(True)
@@ -703,3 +566,4 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
         os.remove(safe_thumb)
     if local_thumb and os.path.exists(local_thumb):
         os.remove(local_thumb)
+
