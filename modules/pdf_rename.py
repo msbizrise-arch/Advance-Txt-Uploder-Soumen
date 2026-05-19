@@ -12,7 +12,7 @@ from vars import AUTH_USERS, CREDIT
 
 def register_pdf_rename_handlers(bot):
 
-    @bot.on_message(filters.command(["pdfrename", "pdf"]) & filters.private)
+    @bot.on_message(filters.command("pdfrename") & filters.private)
     async def pdf_rename_cmd(client, m: Message):
         """
         /pdfrename — 3-step PDF rename:
@@ -46,6 +46,9 @@ def register_pdf_rename_handlers(bot):
             await editable.edit("❌ Cancelled.")
             await pdf_msg.delete()
             return
+
+        # Delete user's PDF message
+        await pdf_msg.delete(True)
 
         # Accept any document ending in .pdf (with or without caption)
         if not (pdf_msg.document and pdf_msg.document.file_name.lower().endswith(".pdf")):
