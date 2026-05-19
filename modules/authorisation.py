@@ -57,14 +57,14 @@ def register_authorisation_handlers(bot):
         try:
             new_user_id = int(message.command[1])
             if new_user_id in AUTH_USERS:
-                await message.reply_text("**User ID is already authorized.**")
+                await message.reply_text("**this User ID is already authorized🙆🏿‍♀️.**")
             else:
                 AUTH_USERS.append(new_user_id)
                 _save_auth_store()  # ← Persist karo immediately
-                await message.reply_text(f"**User ID `{new_user_id}` added to authorized users.**")
-                await client.send_message(chat_id=new_user_id, text=f"<b>Great! You are added in Premium Membership!</b>")
+                await message.reply_text(f"**User ID `{new_user_id}` ✅Successfully added to authorized users.**")
+                await client.send_message(chat_id=new_user_id, text=f"<b>✅Great Baby You are added in Premium Membership!</b>")
         except (IndexError, ValueError):
-            await message.reply_text("**Please provide a valid user ID.**")
+            await message.reply_text("**Please provide a valid user ID🙄.**")
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_message(filters.command("users") & filters.private)
     async def list_auth_users(client: Client, message: Message):
@@ -72,7 +72,7 @@ def register_authorisation_handlers(bot):
             return
     
         user_list = '\n'.join(map(str, AUTH_USERS))
-        await message.reply_text(f"**Authorized Users:**\n{user_list}")
+        await message.reply_text(f"**Overall Authorized Users:**\n{user_list}")
   
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_message(filters.command("rmauth") & filters.private)
@@ -83,12 +83,12 @@ def register_authorisation_handlers(bot):
         try:
             user_id_to_remove = int(message.command[1])
             if user_id_to_remove not in AUTH_USERS:
-                await message.reply_text("**User ID is not in the authorized users list.**")
+                await message.reply_text("**this User ID is not in the authorized users list🙆🏿‍♀️.**")
             else:
                 AUTH_USERS.remove(user_id_to_remove)
                 _save_auth_store()  # ← Persist karo immediately
-                await message.reply_text(f"**User ID `{user_id_to_remove}` removed from authorized users.**")
-                await client.send_message(chat_id=user_id_to_remove, text=f"<b>Oops! You are removed from Premium Membership!</b>")
+                await message.reply_text(f"**User ID `{user_id_to_remove}` ✅ Done! user removed from authorized users.**")
+                await client.send_message(chat_id=user_id_to_remove, text=f"<b>🫩Oops! You are removed from Premium Membership!</b>")
         except (IndexError, ValueError):
-            await message.reply_text("**Please provide a valid user ID.**")
+            await message.reply_text("**Please provide a valid user ID🙄.**")
           
