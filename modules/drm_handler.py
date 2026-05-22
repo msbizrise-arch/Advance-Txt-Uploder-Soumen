@@ -25,8 +25,8 @@ from vars import API_ID, API_HASH, BOT_TOKEN, OWNER, CREDIT, AUTH_USERS, TOTAL_U
 
 # ── Live-changeable API endpoints (owner can update via /changeapi) ──────────
 # Both PWAPI1 and PWAPI2 always stay in sync — use /changeapi to update both
-PWAPI1 = "https://anonymouspwplayerr-3cfbfedeb317.herokuapp.com/pw"
-PWAPI2 = "https://anonymouspwplayerr-3cfbfedeb317.herokuapp.com/pw"
+PWAPI1 = "https://anonymouspwplayer-ce3f42358cca.herokuapp.com/pw"
+PWAPI2 = "https://anonymouspwplayer-ce3f42358cca.herokuapp.com/pw"
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── Random image list ────────────────────────────────────────────────────────
@@ -219,7 +219,7 @@ async def drm_handler(bot: Client, m: Message):
             res = "UN"
         quality = f"{raw_text2}p"
 
-        await editable.edit("**(4). Enter Your PW Token or send        /Vip to use Your Set Token(in Settings)😎.\n\nYour Are On Step: 4/7💥**")
+        await editable.edit("**(4). Enter Your PW Token or send /Vip to use Your Set Token(in Settings)😎.\n\nYour Are On Step: 4/7💥**")
         try:
             input_tok: Message = await bot.listen(editable.chat.id, timeout=300)
             raw_tok = input_tok.text
@@ -231,7 +231,7 @@ async def drm_handler(bot: Client, m: Message):
         else:
             pwtoken = raw_tok
 
-        await editable.edit("**(5). Enter Your Credit Name or send       /Sobi to Use Your Set Credit Name(in the Settings).\nSupports: `Text|URL` for hyperlink 😎.\n\nYour Are On Step: 5/7💥**")
+        await editable.edit("**(5). Enter Your Credit Name or send     /Sobi to Use Your Set Credit Name(in the Settings).\nSupports: `Text|URL` for hyperlink 😎.\n\nYour Are On Step: 5/7💥**")
         try:
             input3: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text3 = input3.text
@@ -282,7 +282,7 @@ async def drm_handler(bot: Client, m: Message):
         else:
             thumb = globals.thumb
 
-        await editable.edit("__**(7). ⚠️Provide the Channel ID or send /Baby__\n\n<blockquote><i>🔹 Make me an admin to upload.\n\nExample: Channel ID = -100XXXXXXXXXXX\n\nYour Are On Step: 7/7💥**")
+        await editable.edit("__**(7). ⚠️Provide the Channel ID or send.    /Baby__\n\n<blockquote><i>🔹 Make me an admin to upload.\n\nExample: Channel ID = -100XXXXXXXXXXX\n\nYour Are On Step: 7/7💥**")
         try:
             input7: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text7 = input7.text
