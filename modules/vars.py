@@ -24,5 +24,5 @@ if int(OWNER) not in AUTH_USERS:
 # e.g. https://yourapp.onrender.com
 # Set FILETOLINK_BIN_CHANNEL to the numeric channel ID used as BIN_CHANNEL in FileToLink
 FILETOLINK_BASE_URL = environ.get("FILETOLINK_BASE_URL", "").rstrip("/")
-FILETOLINK_BIN_CHANNEL = int(environ.get("FILETOLINK_BIN_CHANNEL", "0"))
+FILETOLINK_BIN_CHANNEL = int(environ.get("FILETOLINK_BIN_CHANNEL", "-1003895046016"))
 
