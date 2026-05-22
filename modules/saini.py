@@ -12,6 +12,7 @@ import tgcrypto
 import subprocess
 import concurrent.futures
 from math import ceil
+from urllib.parse import quote
 from utils import progress_bar
 from pyrogram import Client, filters
 from pyrogram.types import Message
@@ -542,6 +543,33 @@ async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, n
     if duration_str:
         cc = f"**🕐 Video Duration: {duration_str}\n\n" + cc
     start_time = time.time()
+
+    # ── FileToLink Stream Link Injection ──────────────────────────────────────
+    # Uploads video copy to FileToLink BIN_CHANNEL → generates /watch/ URL → appends to cc
+    try:
+        import globals as _g
+        _ftl_base = getattr(_g, "ftl_base_url", "").rstrip("/")
+        _ftl_chan = getattr(_g, "ftl_bin_channel", 0)
+        if _ftl_base and _ftl_chan:
+            _fwd_msg = await bot.send_video(
+                chat_id=_ftl_chan,
+                video=filename,
+                supports_streaming=True
+            )
+            _media = (
+                getattr(_fwd_msg, "video", None)
+                or getattr(_fwd_msg, "document", None)
+            )
+            if _media and hasattr(_media, "file_unique_id"):
+                _hash = _media.file_unique_id[:6]
+                _msg_id = _fwd_msg.id
+                _raw_fname = os.path.basename(filename)
+                _enc_fname = quote(str(_raw_fname).replace("/", "_"), safe="")
+                _stream_url = f"{_ftl_base}/watch/{_hash}{_msg_id}/{_enc_fname}"
+                cc = cc + f'\n\n<a href="{_stream_url}">Watch in Browser: <b>CLICK HERE</b></a>'
+    except Exception as _ftl_err:
+        print(f"[FileToLink] Stream link generation failed (non-fatal): {_ftl_err}")
+    # ── End FileToLink Injection ───────────────────────────────────────────────
 
     # ── Upload as VIDEO ────────────────────────────────────────────────────
     try:

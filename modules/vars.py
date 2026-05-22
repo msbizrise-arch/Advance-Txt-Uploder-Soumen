@@ -19,3 +19,10 @@ AUTH_USERS = [int(user_id) for user_id in AUTH_USER]
 if int(OWNER) not in AUTH_USERS:
     AUTH_USERS.append(int(OWNER))
 
+# ── FileToLink Stream Integration ────────────────────────────────────────────
+# Set FILETOLINK_BASE_URL to your FileToLink Render deployment URL
+# e.g. https://yourapp.onrender.com
+# Set FILETOLINK_BIN_CHANNEL to the numeric channel ID used as BIN_CHANNEL in FileToLink
+FILETOLINK_BASE_URL = environ.get("FILETOLINK_BASE_URL", "").rstrip("/")
+FILETOLINK_BIN_CHANNEL = int(environ.get("FILETOLINK_BIN_CHANNEL", "0"))
+

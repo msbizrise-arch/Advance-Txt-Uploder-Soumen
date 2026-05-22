@@ -18,6 +18,7 @@ def register_settings_handlers(bot):
             [InlineKeyboardButton("✍️ Add Credit", callback_data="add_credit_command"), InlineKeyboardButton("🔏 Set Token", callback_data="set_token_command")],
             [InlineKeyboardButton("💧 Watermark", callback_data="wattermark_command")],
             [InlineKeyboardButton("📽️ Video Quality", callback_data="quality_command"), InlineKeyboardButton("🏷️ Topic", callback_data="topic_command")],
+            [InlineKeyboardButton("🌐 Stream URL (FileToLink)", callback_data="ftl_url_command")],
             [InlineKeyboardButton("🔄 Reset", callback_data="resset_command")],
             [InlineKeyboardButton("🔙 Back to Main Menu", callback_data="back_to_main_menu")]
         ])
@@ -393,6 +394,42 @@ def register_settings_handlers(bot):
                 await editable.edit(f"Topic disabled in Caption ✅!", reply_markup=keyboard)
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set Topic in Caption:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
+        finally:
+            await input_msg.delete(True)
+# .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+    @bot.on_callback_query(filters.regex("ftl_url_command"))
+    async def ftl_url_settings(client, callback_query):
+        import globals as g
+        user_id = callback_query.from_user.id
+        first_name = callback_query.from_user.first_name
+        current = g.ftl_base_url or "Not Set"
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 Back to Settings", callback_data="setttings")]
+        ])
+        editable = await callback_query.message.edit(
+            f"✨ <b>Welcome <a href='tg://user?id={user_id}'>{first_name}</a></b>\n\n"
+            f"🌐 <b>FileToLink Stream URL</b>\n\n"
+            f"<b>Current URL:</b> <code>{current}</code>\n\n"
+            f"Send your FileToLink Render URL (e.g. <code>https://yourapp.onrender.com</code>)\n"
+            f"Send <code>/d</code> to disable stream links.",
+            reply_markup=keyboard,
+            disable_web_page_preview=True
+        )
+        try:
+            input_msg = await client.listen(user_id, timeout=60)
+            new_url = input_msg.text.strip()
+            if new_url == "/d":
+                g.ftl_base_url = ""
+                await editable.edit("✅ <b>FileToLink stream links disabled.</b>", reply_markup=keyboard)
+            else:
+                g.ftl_base_url = new_url.rstrip("/")
+                await editable.edit(
+                    f"✅ <b>FileToLink URL set to:</b>\n<code>{g.ftl_base_url}</code>",
+                    reply_markup=keyboard,
+                    disable_web_page_preview=True
+                )
+        except Exception as e:
+            await editable.edit(f"<b>❌ Failed to set Stream URL:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
             await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
