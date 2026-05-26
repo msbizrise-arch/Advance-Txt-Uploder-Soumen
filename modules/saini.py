@@ -423,7 +423,7 @@ async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, chan
 
     # Apply PDF watermark if set
     if pdfwatermark and pdfwatermark != "/d":
-        wm_output = f"Mustfa_{safe_name}_wm.pdf"
+        wm_output = f"@MR_Toxic_1_{safe_name}_wm.pdf"
         try:
             success = await asyncio.wait_for(
                 apply_pdf_watermark(ka, wm_output, pdfwatermark),
@@ -436,8 +436,8 @@ async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, chan
             final_pdf = wm_output
             watermarked = True
     else:
-        # No watermark — rename with Mustfa prefix
-        named_pdf = f"Mustfa_{safe_name}.pdf"
+        # No watermark — rename with @MR_Toxic_1 prefix
+        named_pdf = f"@MR_Toxic_1_{safe_name}.pdf"
         try:
             os.rename(ka, named_pdf)
             final_pdf = named_pdf
