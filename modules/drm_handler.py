@@ -608,8 +608,8 @@ async def drm_handler(bot: Client, m: Message):
 #........................................................................................................................................................................................
             try:
                 if m.text:
-                    cc = f'**🖲️𝐕𝐈𝐃_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} {res} @MR_Toxic_1.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-                    cc1 = f'**💾 𝐏𝐃𝐅_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} @MR_Toxic_1.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                    cc = f'**🖲️𝐕𝐈𝐃_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} {res} @MR_Toxic_1.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                    cc1 = f'**💾 𝐏𝐃𝐅_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} @MR_Toxic_1.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
                     cczip = f'[{name1}.zip]({link0})'
                     ccimg = f'[{name1}.jpg]({link0})'
                     ccm = f'[{name1}.mp3]({link0})'
@@ -617,20 +617,20 @@ async def drm_handler(bot: Client, m: Message):
                 else:
                     if topic == "/yes":
                         if caption == "/cc1":
-                            cc = f'**🖲️𝐕𝐈𝐃_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{v_name} [{res}p] @MR_Toxic_1.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞: {t_name}</b></blockquote>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-                            cc1 = f'**💾𝐏𝐃𝐅_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{v_name} @MR_Toxic_1.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                            cc = f'**🖲️𝐕𝐈𝐃_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{v_name} [{res}p] @MR_Toxic_1.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞: {t_name}</b></blockquote>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                            cc1 = f'**💾𝐏𝐃𝐅_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{v_name} @MR_Toxic_1.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
                             cczip = f'[📁]Zip Id : {str(count).zfill(3)}\n**Zip Title :** `{v_name}.zip`\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n'
                             ccimg = f'[🖼️]Img Id : {str(count).zfill(3)}\n**Img Title :** `{v_name}.jpg`\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n'
                             cchtml = f'[🌐]Html Id : {str(count).zfill(3)}\n**Html Title :** `{v_name}.html`\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n'
-                            ccyt = f'[🎥]Vid Id : {str(count).zfill(3)}\n**Video Title :** `{v_name}.mp4`\n<a href="{url}">__**Click Here to Watch Stream**__</a>\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n'
+                            ccyt = f'[🎥]Vid Id : {str(count).zfill(3)}\n**Video Title :** `{v_name}.mp4`\n<a href="{url}">__**Click Here to Watch Stream**__</a>\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤\n**★彡[{CR}]彡★\n'
                             ccm = f'[🎵]Mp3 Id : {str(count).zfill(3)}\n**Audio Title :** `{v_name}.mp3`\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n'
                         elif caption == "/cc2":
-                            cc = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🎞️ 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} @MR_Toxic_1.mkv</b>\n<b>├── Resolution : [{res}]</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            cc1 = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>📁 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} @MR_Toxic_1.pdf</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            cczip = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>📒 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .zip</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            ccimg = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🖼️ 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .jpg</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            ccm = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🎵 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .mp3</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            cchtml = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🌐 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .html</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
+                            cc = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🎞️ 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} @MR_Toxic_1.mkv</b>\n<b>├── Resolution : [{res}]</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            cc1 = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>📁 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} @MR_Toxic_1.pdf</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            cczip = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>📒 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .zip</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            ccimg = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🖼️ 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .jpg</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            ccm = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🎵 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .mp3</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            cchtml = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🌐 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .html</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
                         else:
                             cc = f'<blockquote><b>⋅ ─ {t_name} ─ ⋅</b></blockquote>\n<b>{str(count).zfill(3)}.</b> {v_name} [{res}p] @MR_Toxic_1.mkv'
                             cc1 = f'<blockquote><b>⋅ ─ {t_name} ─ ⋅</b></blockquote>\n<b>{str(count).zfill(3)}.</b> {v_name} @MR_Toxic_1.pdf'
@@ -640,19 +640,19 @@ async def drm_handler(bot: Client, m: Message):
                             cchtml = f'<blockquote><b>⋅ ─ {t_name} ─ ⋅</b></blockquote>\n<b>{str(count).zfill(3)}.</b> {v_name} .html'
                     else:
                         if caption == "/cc1":
-                            cc = f'**📹 𝐕𝐈𝐃_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{name1} [{res}p] @MR_Toxic_1.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-                            cc1 = f'**💾𝐏𝐃𝐅_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{name1} @MR_Toxic_1.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                            cc = f'**📹 𝐕𝐈𝐃_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{name1} [{res}p] @MR_Toxic_1.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                            cc1 = f'**💾𝐏𝐃𝐅_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{name1} @MR_Toxic_1.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
                             cczip = f'[📁]Zip Id : {str(count).zfill(3)}\n**Zip Title :** `{name1}.zip`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n' 
                             ccimg = f'[🖼️]Img Id : {str(count).zfill(3)}\n**Img Title :** `{name1}.jpg`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n'
                             ccm = f'[🎵]Audio Id : {str(count).zfill(3)}\n**Audio Title :** `{name1}.mp3`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n'
                             cchtml = f'[🌐]Html Id : {str(count).zfill(3)}\n**Html Title :** `{name1}.html`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**★彡[{CR}]彡★\n'
                         elif caption == "/cc2":
-                            cc = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🎞️ 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} @MR_Toxic_1.mkv</b>\n<b>├── Resolution : [{res}]</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            cc1 = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>📁 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} @MR_Toxic_1.pdf</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            cczip = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>📒 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .zip</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            ccimg = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🖼️ 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .jpg</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            ccm = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🎵 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .mp3</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
-                            cchtml = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🌐 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .html</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : ★彡[{CR}]彡★**"
+                            cc = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🎞️ 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} @MR_Toxic_1.mkv</b>\n<b>├── Resolution : [{res}]</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            cc1 = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>📁 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} @MR_Toxic_1.pdf</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            cczip = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>📒 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .zip</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            ccimg = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🖼️ 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .jpg</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            ccm = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🎵 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .mp3</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
+                            cchtml = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🌐 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .html</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★**"
                         else:
                             cc = f'<b>{str(count).zfill(3)}.</b> {name1} [{res}p] @MR_Toxic_1.mkv'
                             cc1 = f'<b>{str(count).zfill(3)}.</b> {name1} @MR_Toxic_1.pdf'
