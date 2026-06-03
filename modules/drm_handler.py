@@ -573,16 +573,20 @@ async def drm_handler(bot: Client, m: Message):
 
             #elif "d1d34p8vz63oiq" in url or "sec1.pw.live" in url:
             elif "childId" in url and "parentId" in url:
-                if m.text:
-                    # Direct link — URL already contains token info, download as-is
-                    pass
-                else:
-                    if pwtoken == "pwtoken" or not pwtoken:
-                        await send_failed_notice(bot, channel_id, count, name1, link0, 'PW Token not set! Please set Physics Wallah token in Settings → Set Token → Physics Wallah')
-                        count += 1
-                        failed_count += 1
-                        continue
-                    url = f"{PWAPI2}?url={url}&token={pwtoken}"
+                if pwtoken == "pwtoken" or not pwtoken:
+            await send_failed_notice(
+                bot,
+                channel_id,
+                count,
+                name1,
+                link0,
+                'PW Token not set! Please set Physics Wallah token in Settings → Set Token → Physics Wallah'
+            )
+            count += 1
+            failed_count += 1
+            continue
+
+        url = f"{PWAPI2}?url={url}&token={pwtoken}"
             
             elif 'encrypted.m' in url:
                 appxkey = url.split('*')[1]
@@ -1271,8 +1275,8 @@ def register_drm_handlers(bot):
             else:
                 cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{namef}.mp4"'
 
-            cc = f'**🖲️𝐕𝐈𝐃_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} {res} @MR_Toxic_1.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-            cc1 = f'**💾 𝐏𝐃𝐅_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} @MR_Toxic_1.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+            cc = f'**🖲️𝐕𝐈𝐃_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} {res} @MR_Toxic_1.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+            cc1 = f'**💾 𝐏𝐃𝐅_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} @MR_Toxic_1.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ :\n★彡[{CR}]彡★\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
             cczip = f'[{name1}.zip]({link0})'
             ccimg = f'[{name1}.jpg]({link0})'
             ccm = f'[{name1}.mp3]({link0})'
