@@ -973,8 +973,8 @@ def register_drm_handlers(bot):
         _love_eligible.pop(m.chat.id, None)
 
         editable = await m.reply_text(
-            "**🔹𝐌𝐞𝐫𝐞 𝐁𝐚𝐛𝐮 𝐧𝐞 𝐭𝐡𝐚𝐧𝐚 𝐭𝐡𝐚𝐲𝐚💕**\n"
-            "**🔹𝐊𝐡𝐚𝐲𝐚𝐥 𝐫𝐚𝐤𝐡𝐨 𝐚𝐩𝐧𝐚 𝐁𝐚𝐜𝐡𝐜𝐡𝐚🥺.**"
+            "**🔹𝐈 𝐋𝐎𝐕𝐄 𝐘𝐎𝐔💕🔹**\n"
+            "**🔹𝐒𝐨𝐫𝐫𝐲 𝐒𝐨𝐫𝐫𝐲 𝐉𝐚𝐛𝐚𝐚𝐧 𝐟𝐢𝐬𝐚𝐥 𝐠𝐲𝐢🙆🏻‍♀️😁.**"
         )
 
         x = await m.download()
